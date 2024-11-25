@@ -15,4 +15,8 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Hub.Shared\Hub.Shared.csproj" />
+  </ItemGroup>
+
 </Project>

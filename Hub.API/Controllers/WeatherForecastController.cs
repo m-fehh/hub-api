@@ -1,4 +1,6 @@
+using Hub.Domain.Entities.Logger;
 using Hub.Infrastructure;
+using Hub.Infrastructure.Database;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Hub.API.Controllers

@@ -1,7 +1,25 @@
-﻿using Hub.Infrastructure.Database.Interfaces;
-
-namespace Hub.Infrastructure.Database.Models
+﻿namespace Hub.Shared.Interfaces
 {
+    public interface IBaseEntity : ICloneable
+    {
+        long Id { get; set; }
+        bool Equals(IBaseEntity other);
+        bool Equals(object obj);
+        int GetHashCode();
+    }
+
+
+    public interface IModificationControl : IBaseEntity
+    {
+        DateTime? CreationUTC { get; set; }
+        DateTime? LastUpdateUTC { get; set; }
+    }
+
+    public interface IListItemEntity
+    {
+        bool DeleteFromList { get; set; }
+    }
+
     /// <summary>
     /// Implementação padrão da interface que representa uma entidade no banco
     /// </summary>
