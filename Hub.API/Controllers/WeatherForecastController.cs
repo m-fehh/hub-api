@@ -1,3 +1,4 @@
+using Hub.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Hub.API.Controllers

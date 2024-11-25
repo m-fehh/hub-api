@@ -6,6 +6,10 @@ using System.Reflection;
 using Hub.Infrastructure.Autofac.Dependency;
 using Hub.API;
 using Autofac.Extensions.DependencyInjection;
+using Hub.Infrastructure.Localization;
+using Hub.Infrastructure.Resources;
+using Hub.Application.Resource;
+using Hub.API.Configuration;
 
 var builder = WebApplication.CreateBuilder();
 
@@ -26,14 +30,14 @@ builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
     // Inicializa o Engine com a configuração do HubProvider e outros parâmetros
     Engine.Initialize(
         executingAssembly: Assembly.GetExecutingAssembly(),
-        nameProvider: new HubProvider(builder.Services.BuildServiceProvider().GetRequiredService<IHttpContextAccessor>()), 
+        nameProvider: new HubProvider(), 
         tasks: new List<IStartupTask>()
         {
             new StartupTask(),
         },
         dependencyRegistrars: new List<IDependencySetup>()
         {
-            // Adicione os registradores de dependência aqui
+            new DependencyRegistrar(),
         },
         containerBuilder: containerBuilder,
         csb: new ConnectionStringBaseVM()
@@ -51,6 +55,8 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
+Engine.SetContainer((IContainer)app.Services.GetAutofacRoot());
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -63,5 +69,12 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+var startupTasks = new List<Task>();
+
+startupTasks.Add(Task.Run(() =>
+{
+    Engine.Resolve<DefaultLocalizationProvider>().RegisterWrapper(new ResourceWrapper(typeof(TextResource).Assembly, "Resource.TextResource"));
+}));
 
 app.Run();

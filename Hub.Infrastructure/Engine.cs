@@ -18,6 +18,8 @@ using System.Configuration;
 using Microsoft.EntityFrameworkCore;
 using Hub.Domain;
 using Hub.Infrastructure.Extensions;
+using Hub.Infrastructure.Localization;
+using Hub.Infrastructure.Database.Interfaces;
 
 namespace Hub.Infrastructure
 {
@@ -33,6 +35,7 @@ namespace Hub.Infrastructure
         private static List<IAutoMapperStartup> _autoMapperStartups;
         private static object appSettingsLock = new object();
         private static Action initializeAction = null;
+
         class LifetimeScopeDispose : IDisposable
         {
             public ILifetimeScope Scope { get; set; }
@@ -54,6 +57,28 @@ namespace Hub.Infrastructure
                 }
 
                 IsDisposed = true;
+            }
+        }
+
+        class IgnoreTenantConfigScopeDisposable : IDisposable
+        {
+            private bool originalValue;
+
+            public IgnoreTenantConfigScopeDisposable()
+            {
+                originalValue = IgnoreTenantConfigsScope.Value;
+                IgnoreTenantConfigsScope.Value = true;
+            }
+
+            public IgnoreTenantConfigScopeDisposable(bool ignoreValue)
+            {
+                originalValue = IgnoreTenantConfigsScope.Value;
+                IgnoreTenantConfigsScope.Value = ignoreValue;
+            }
+
+            public void Dispose()
+            {
+                IgnoreTenantConfigsScope.Value = originalValue;
             }
         }
 
@@ -109,28 +134,44 @@ namespace Hub.Infrastructure
 
                 if (csb != null)
                 {
-                    Engine.Resolve<ConnectionStringConfig>().Set(csb);
+                    Engine.Resolve<ConnectionStringBaseConfigurator>().Set(csb);
                 }
 
-                if (csb != null)
+                IOrmConfiguration ormConfiguration = null;
+
+                if (TryResolve(out ormConfiguration))
                 {
-                    containerBuilder.Register(c =>
-                    {
-                        var connectionStringConfig = c.Resolve<ConnectionStringConfig>();
-                        var connectionString = connectionStringConfig.GetConnectionString(); 
-
-                        var optionsBuilder = new DbContextOptionsBuilder<DatabaseContext>();
-                        optionsBuilder.UseSqlServer(connectionString); 
-
-                        return new DatabaseContext(optionsBuilder.Options); 
-                    })
-                        .InstancePerLifetimeScope();
+                    ormConfiguration.Configure();
                 }
             });
 
             if (_containerManager.Container != null)
             {
                 initializeAction();
+            }
+        }
+
+        public static IDisposable BeginIgnoreTenantConfigs(bool ignoreTenantConfigs = true)
+        {
+            return new IgnoreTenantConfigScopeDisposable(ignoreTenantConfigs);
+        }
+
+        public static string ConnectionString(string settingName)
+        {
+            var cs = ConfigurationManager.ConnectionStrings[settingName];
+
+            if (cs != null)
+                return cs.ConnectionString;
+            else
+            {
+                var key = AppSettings[$"ConnectionString-{settingName}"];
+
+                if (key != null)
+                {
+                    return key;
+                }
+
+                return Environment.GetEnvironmentVariable($"ConnectionString-{settingName}");
             }
         }
 

@@ -1,5 +1,5 @@
 ﻿using Hub.Infrastructure.Autofac;
-using Hub.Infrastructure.Database;
+using Hub.Infrastructure.Database.Interfaces;
 
 namespace Hub.Infrastructure.MultiTenant
 {
