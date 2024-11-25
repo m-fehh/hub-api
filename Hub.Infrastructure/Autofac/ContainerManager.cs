@@ -1,7 +1,7 @@
 ﻿using Autofac;
 using Autofac.Builder;
 using Hub.Infrastructure.Autofac.Dependency;
-using Hub.Shared.Enums.Infra;
+using Hub.Shared.Enums.Infrastructure;
 
 namespace Hub.Infrastructure.Autofac
 {

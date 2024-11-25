@@ -1,4 +1,4 @@
-﻿namespace Hub.Shared.Enums.Infra
+﻿namespace Hub.Shared.Enums.Infrastructure
 {
     public enum EComponentLifeStyle
     {
