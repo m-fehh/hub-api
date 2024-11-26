@@ -2,6 +2,7 @@
 using System.Reflection;
 using Hub.Shared.Interfaces;
 using System.Collections;
+using Hub.Infrastructure.Database.NhManagement;
 
 namespace Hub.Infrastructure.Nominator
 {
@@ -108,7 +109,7 @@ namespace Hub.Infrastructure.Nominator
             {
                 if (obj is IBaseEntity && refreshIfNull)
                 {
-                    obj = Engine.Resolve<IRepository<BaseEntity>>().RefreshAsync((BaseEntity)(obj as IBaseEntity));
+                    obj = Engine.Resolve<IRepository<BaseEntity>>().Refresh(obj as IBaseEntity);
 
                     if (obj == null) return String.Empty;
 

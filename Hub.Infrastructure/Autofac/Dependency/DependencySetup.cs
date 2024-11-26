@@ -1,82 +1,184 @@
 ﻿using Autofac;
 using Autofac.Core;
 using Autofac.Core.Registration;
-using Hub.Domain;
 using Hub.Infrastructure.Database;
-using Hub.Infrastructure.Localization;
+using Hub.Infrastructure.Database.NhManagement;
+using Hub.Infrastructure.Logger.Interfaces;
 using Hub.Infrastructure.MultiTenant;
 using Hub.Infrastructure.Nominator;
-using Hub.Infrastructure.Seeders;
-using Microsoft.EntityFrameworkCore;
-using System.Reflection;
+using Hub.Shared.Log;
+using MediatR;
 
 namespace Hub.Infrastructure.Autofac.Dependency
 {
     public class DependencySetup : IDependencySetup
     {
+        //public void Register(ContainerBuilder builder)
+        //{
+        //    // Registro do DbContext (DatabaseContext)
+        //    builder.Register(context =>
+        //    {
+        //        var optionsBuilder = new DbContextOptionsBuilder<DatabaseContext>();
+        //        // Aqui você pode configurar a string de conexão e outras opções
+        //        optionsBuilder.UseSqlServer(Engine.ConnectionString("default"));
+
+        //        return new DatabaseContext(optionsBuilder.Options);
+        //    })
+        //    .As<DatabaseContext>()
+        //    .InstancePerLifetimeScope();
+
+        //    // Registra os serviços do contêiner
+        //    builder.RegisterType<TenantLifeTimeScope>().AsSelf().InstancePerLifetimeScope();
+        //    builder.RegisterType<DefaultTenantManager>().As<ITenantManager>().SingleInstance();
+        //    builder.RegisterType<ConnectionStringBaseConfigurator>().AsSelf().SingleInstance();
+        //    builder.RegisterType<DefaultLocalizationProvider>().As<ILocalizationProvider>().AsSelf();
+        //    builder.RegisterType<NominatorManager>().As<INominatorManager>().SingleInstance();
+        //    builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>)).OnActivating(ActivingRepository);
+        //    builder.RegisterType<DefaultOrmConfiguration>().As<IOrmConfiguration>().SingleInstance();
+        //    builder.RegisterType<DefaultOrmConfiguration>().AsSelf().SingleInstance();
+
+        //    // Registrar todos os seeders
+        //    RegisterSeeders(builder);
+
+        //    void ActivingRepository(IActivatingEventArgs<object> e)
+        //    {
+        //        var typeToLookup = e.Instance.GetType().GetGenericArguments()[0];
+
+        //        if (typeToLookup.IsInterface)
+        //        {
+        //            try
+        //            {
+        //                var foundEntry = e.Context.Resolve(typeToLookup);
+
+        //                if (foundEntry != null)
+        //                {
+        //                    ((ISetType)e.Instance).SetType(foundEntry.GetType());
+        //                }
+        //            }
+        //            catch (ComponentNotRegisteredException)
+        //            {
+        //            }
+        //        }
+        //    }
+        //}
+
         public void Register(ContainerBuilder builder)
         {
-            // Registro do DbContext (DatabaseContext)
-            builder.Register(context =>
-            {
-                var optionsBuilder = new DbContextOptionsBuilder<DatabaseContext>();
-                // Aqui você pode configurar a string de conexão e outras opções
-                optionsBuilder.UseSqlServer(Engine.ConnectionString("default"));
+            builder.RegisterType<LogManager>().As<ILogManager>().SingleInstance();
 
-                return new DatabaseContext(optionsBuilder.Options);
-            })
-            .As<DatabaseContext>()
-            .InstancePerLifetimeScope();
-
-            // Registra os serviços do contêiner
-            builder.RegisterType<TenantLifeTimeScope>().AsSelf().InstancePerLifetimeScope();
-            builder.RegisterType<DefaultTenantManager>().As<ITenantManager>().SingleInstance();
-            builder.RegisterType<ConnectionStringBaseConfigurator>().AsSelf().SingleInstance();
-            builder.RegisterType<DefaultLocalizationProvider>().As<ILocalizationProvider>().AsSelf();
             builder.RegisterType<NominatorManager>().As<INominatorManager>().SingleInstance();
-            builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>)).OnActivating(ActivingRepository);
+
+            //builder.RegisterType<SendMail>().As<ISendMail>().SingleInstance();
+
+            builder.RegisterType<IgnoreLogScope>().AsSelf().InstancePerLifetimeScope();
+
+            builder.RegisterType<IgnoreModificationControl>().AsSelf().InstancePerLifetimeScope();
+
+            builder.RegisterType<TenantLifeTimeScope>().AsSelf().InstancePerLifetimeScope();
+
+            //builder.RegisterType<AzureCloudStorageManager>().As<IAzureCloudStorageManager>().SingleInstance();
+            //builder.RegisterType<AzureCloudStorageManager>().AsSelf().SingleInstance();
+
+            //builder.RegisterType<RedisService>().AsSelf().SingleInstance();
+            //builder.RegisterType<RedisService>().As<IRedisService>().SingleInstance();
+
+            //builder.RegisterType<RedLockManager>().AsSelf().SingleInstance();
+            //builder.RegisterType<RedLockManager>().As<ILockManager>().SingleInstance();
+
+            //builder.RegisterType<ServiceBusManager>().AsSelf().SingleInstance();
+
+            //builder.RegisterGeneric(typeof(AzureTableStorageManager<>)).AsSelf().InstancePerLifetimeScope();
+
+            builder.RegisterType<NhRepository>().AsImplementedInterfaces();
+            builder.RegisterGeneric(typeof(NhRepository<>)).As(typeof(IRepository<>)).OnActivating(ActivingRepository);
+            //builder.RegisterGeneric(typeof(SchNoSqlRepository<>)).AsSelf();
+
+            builder.RegisterType<NhDatabaseInformation>().As<IDatabaseInformation>();
+
+            builder.RegisterType<NhLifetimeScopeSession>().As<ILifetimeScopeSession>().InstancePerLifetimeScope();
+
+            builder.RegisterType<NhStartSessionFactory>().As<INhStartSessionFactory>().SingleInstance();
+
+            //builder.RegisterType<NhStatelessSessionScope>().As<INhStatelessSessionScope>();
+
+            //builder.RegisterType<CosmosDbConnectionProvider>().As<INoSqlConnectionProvider>().SingleInstance();
+            //builder.RegisterType<CosmosDbConnectionProvider>().AsSelf().SingleInstance();
+
             builder.RegisterType<DefaultOrmConfiguration>().As<IOrmConfiguration>().SingleInstance();
             builder.RegisterType<DefaultOrmConfiguration>().AsSelf().SingleInstance();
 
-            // Registrar todos os seeders
-            RegisterSeeders(builder);
+            //builder.RegisterType<ApiRequestService>().AsImplementedInterfaces().AsSelf().SingleInstance();
 
-            void ActivingRepository(IActivatingEventArgs<object> e)
+            //builder.RegisterType<RandomGeneration>().As<IRandomGeneration>().SingleInstance();
+
+            //builder.RegisterGeneric(typeof(AzureSearchManager<>)).AsSelf().InstancePerLifetimeScope();
+            //builder.RegisterType<RequestParametersBuilder>().AsImplementedInterfaces();
+            //builder.RegisterType<RequestParametersBuilder>().AsSelf();
+
+            //builder.RegisterType<EngineInitializationParametersBuilder>().AsImplementedInterfaces();
+            //builder.RegisterType<EngineInitializationParametersBuilder>().AsSelf();
+
+            //builder.RegisterType<CacheManager>().AsSelf().SingleInstance();
+            builder.RegisterType<DefaultTenantManager>().As<ITenantManager>().SingleInstance();
+
+            //builder.RegisterType<CurrentTimezone>().As<ICurrentTimezone>().SingleInstance();
+
+            //builder.RegisterType<UserVM>().As<IUser>();
+
+            //builder.RegisterType<MongoManager>().AsSelf().SingleInstance();
+
+            //builder.RegisterGeneric(typeof(MongoRepository<>)).AsSelf().InstancePerLifetimeScope();
+
+            //builder.RegisterType<DatabaseConnectionProvider>().AsSelf().InstancePerLifetimeScope();
+
+            //builder.RegisterType<ConfigurationService>().AsSelf();
+            //builder.RegisterType<ConfigurationService>().AsImplementedInterfaces();
+
+            //builder.RegisterType<ConfigurationManagerConfigProvider>().AsSelf();
+            //builder.RegisterType<EnvironmentConfigProvider>().AsSelf();
+
+            //builder.RegisterGeneric(typeof(ModelEntityMapper<,>)).AsSelf().InstancePerLifetimeScope();
+
+            //builder.RegisterType<NhReadOnlySessionScope>().As<INhReadOnlySessionScope>().InstancePerLifetimeScope();
+
+            builder.RegisterType<ConnectionStringBaseConfigurator>().AsSelf().SingleInstance();
+
+            //builder.RegisterType<StringEncrypter>().As<IStringEncrypter>().SingleInstance();
+
+            //builder.RegisterType<AccessTokenProvider>().As<IAccessTokenProvider>().SingleInstance();
+
+            //builder.RegisterType<Mediator>().As<IMediator>().SingleInstance();
+
+            //builder.RegisterType<BackgroundJobManager>().AsSelf().InstancePerLifetimeScope();
+
+            // request & notification handlers
+            builder.Register<ServiceFactory>(context =>
             {
-                var typeToLookup = e.Instance.GetType().GetGenericArguments()[0];
+                var c = context.Resolve<IComponentContext>();
+                return t => c.Resolve(t);
+            });
+        }
+        void ActivingRepository(IActivatingEventArgs<object> e)
+        {
+            var typeToLookup = e.Instance.GetType().GetGenericArguments()[0];
 
-                if (typeToLookup.IsInterface)
+            if (typeToLookup.IsInterface)
+            {
+                //var foundEntry = e.Context.ComponentRegistry.RegistrationsFor(new TypedService(typeToLookup)).SingleOrDefault();
+
+                try
                 {
-                    try
-                    {
-                        var foundEntry = e.Context.Resolve(typeToLookup);
+                    var foundEntry = e.Context.Resolve(typeToLookup);
 
-                        if (foundEntry != null)
-                        {
-                            ((ISetType)e.Instance).SetType(foundEntry.GetType());
-                        }
-                    }
-                    catch (ComponentNotRegisteredException)
+                    if (foundEntry != null)
                     {
+                        ((ISetType)e.Instance).SetType(foundEntry.GetType());
                     }
                 }
-            }
-        }
+                catch (ComponentNotRegisteredException)
+                {
+                }
 
-        // Método para registrar todos os seeders automaticamente
-        private void RegisterSeeders(ContainerBuilder builder)
-        {
-            builder.RegisterType<SeederManager>().AsSelf().SingleInstance();
-
-            // Encontra todas as classes que implementam ISeeder
-            var seederTypes = Assembly.GetExecutingAssembly()
-                                      .GetTypes()
-                                      .Where(t => typeof(ISeeder).IsAssignableFrom(t) && !t.IsAbstract);
-
-            // Registra cada seeder no container
-            foreach (var seederType in seederTypes)
-            {
-                builder.RegisterType(seederType).As<ISeeder>().InstancePerLifetimeScope();
             }
         }
 

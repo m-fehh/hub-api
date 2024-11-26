@@ -12,8 +12,15 @@
     <PackageReference Include="AutoMapper" Version="10.1.1" />
     <PackageReference Include="Dapper" Version="2.1.35" />
     <PackageReference Include="EmailValidation" Version="1.2.0" />
+    <PackageReference Include="FluentMigrator" Version="6.2.0" />
+    <PackageReference Include="MediatR" Version="11.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="NHibernate" Version="5.3.17" />
+    <PackageReference Include="NHibernate.Caches.CoreDistributedCache" Version="5.7.0" />
+    <PackageReference Include="NHibernate.Caches.CoreDistributedCache.Redis" Version="5.7.0" />
+    <PackageReference Include="NHibernate.Mapping.Attributes" Version="5.1.0" />
+    <PackageReference Include="NHibernateProfiler.Appender" Version="6.0.6047" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="9.0.0" />
     <PackageReference Include="System.Drawing.Common" Version="9.0.0" />
   </ItemGroup>

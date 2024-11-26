@@ -146,7 +146,7 @@ namespace Hub.Infrastructure
                 }
 
                 // Registra e executa todos os seeders
-                Resolve<SeederManager>().SeedAllAsync();
+                //Resolve<SeederManager>().SeedAllAsync();
             });
 
             if (_containerManager.Container != null)
