@@ -8,11 +8,11 @@ namespace Hub.Infrastructure.Database
 {
     internal class Repository<T> : IRepository<T> where T : class, IBaseEntity
     {
-        private readonly DatabaseContext _context;
+        private readonly IDatabaseContext _context;
         private readonly DbSet<T> _dbSet;
         private readonly ILogManager _logManager;
 
-        public Repository(DatabaseContext context, ILogManager logManager = null)
+        public Repository(IDatabaseContext context, ILogManager logManager = null)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
             _dbSet = _context.Set<T>();

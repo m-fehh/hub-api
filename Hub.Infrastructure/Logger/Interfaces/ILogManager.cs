@@ -10,6 +10,7 @@ using Hub.Shared.Interfaces;
 using Hub.Shared.Enums.Infrastructure;
 using Hub.Shared.Interfaces.Logger;
 using Hub.Domain.Entities.Logger;
+using Hub.Infrastructure.Database;
 
 namespace Hub.Infrastructure.Logger.Interfaces
 {
@@ -22,9 +23,9 @@ namespace Hub.Infrastructure.Logger.Interfaces
     public class LogManager : ILogManager
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly DatabaseContext _dbContext;
+        private readonly IDatabaseContext _dbContext;
 
-        public LogManager(IHttpContextAccessor httpContextAccessor, DatabaseContext dbContext)
+        public LogManager(IHttpContextAccessor httpContextAccessor, IDatabaseContext dbContext)
         {
             _httpContextAccessor = httpContextAccessor;
             _dbContext = dbContext;
@@ -130,7 +131,7 @@ namespace Hub.Infrastructure.Logger.Interfaces
             log = InterceptLog(log);
 
             _dbContext.Set<ILog>().Add(log);
-            _dbContext.SaveChanges();
+            _dbContext.SaveChangesAsync();
         }
 
         private ISet<ILogField> GetFieldList<T>(T obj, ILog logFather) where T : class, IBaseEntity // Adicionado restrição para T ser classe
