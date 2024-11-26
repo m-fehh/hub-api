@@ -20,6 +20,7 @@ using Hub.Domain;
 using Hub.Infrastructure.Extensions;
 using Hub.Infrastructure.Localization;
 using Hub.Infrastructure.Database.Interfaces;
+using Hub.Infrastructure.Seeders;
 
 namespace Hub.Infrastructure
 {
@@ -143,6 +144,9 @@ namespace Hub.Infrastructure
                 {
                     ormConfiguration.Configure();
                 }
+
+                // Registra e executa todos os seeders
+                Resolve<SeederManager>().SeedAllAsync();
             });
 
             if (_containerManager.Container != null)
