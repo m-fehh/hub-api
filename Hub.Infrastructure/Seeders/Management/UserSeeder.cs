@@ -4,12 +4,12 @@ namespace Hub.Infrastructure.Seeders.Management
 {
     public class UserSeeder : ISeeder
     {
-        private readonly DatabaseContext _context;
+        //private readonly DatabaseContext _context;
 
-        public UserSeeder(DatabaseContext context)
-        {
-            _context = context;
-        }
+        //public UserSeeder(DatabaseContext context)
+        //{
+        //    _context = context;
+        //}
 
         public async Task<bool> SeedAsync()
         {
