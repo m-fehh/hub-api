@@ -2,6 +2,7 @@
 using Hub.Domain.Entities.Admin;
 using Hub.Infrastructure.Autofac;
 using Hub.Infrastructure.Database.NhManagement;
+using Hub.Shared.DataConfiguration;
 using Microsoft.Data.SqlClient;
 
 namespace Hub.Infrastructure.Database

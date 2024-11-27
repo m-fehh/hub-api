@@ -1,16 +1,19 @@
 ﻿using Autofac;
 using Autofac.Core;
 using Autofac.Core.Registration;
+using Hub.Domain.Entities.SQLManagement;
 using Hub.Domain.SQLManagement;
 using Hub.Infrastructure.Database;
 using Hub.Infrastructure.Database.NhManagement;
 using Hub.Infrastructure.Logger.Interfaces;
 using Hub.Infrastructure.MultiTenant;
 using Hub.Infrastructure.Nominator;
+using Hub.Shared.DataConfiguration;
 using Hub.Shared.Interfaces.MultiTenant;
 using Hub.Shared.Log;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using NHibernate.MultiTenancy;
 
 namespace Hub.Infrastructure.Autofac.Dependency
 {
@@ -110,11 +113,19 @@ namespace Hub.Infrastructure.Autofac.Dependency
 
             builder.Register(c =>
             {
-                var csb = Engine.ConnectionString("adm");
-                var optionsBuilder = new DbContextOptionsBuilder<AdminContext>().UseSqlServer(csb);
+                var cs = Engine.ConnectionString("adm");
+                var optionsBuilder = new DbContextOptionsBuilder<AdminContext>().UseSqlServer(cs);
                 return new AdminContext(optionsBuilder.Options);
             }).AsSelf().InstancePerLifetimeScope();
 
+            //builder.Register(c =>
+            //{
+            //    var cs = Engine.ConnectionString("default");
+            //    var tenantConfiguration = Singleton<NhConfigurationTenant>.Instance.Mapeamentos[0].ConfigurationTenants[0];
+
+            //    var optionsBuilder = new DbContextOptionsBuilder<TenantMigrationContext>().UseSqlServer(cs);
+            //    return new TenantMigrationContext(tenantConfiguration, optionsBuilder.Options);
+            //}).AsSelf().InstancePerLifetimeScope();
 
             // request & notification handlers
             builder.Register<ServiceFactory>(context =>

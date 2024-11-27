@@ -1,12 +1,11 @@
 ﻿using Hub.Infrastructure.Autofac;
 using Hub.Infrastructure.Extensions;
-using NHibernate.Cfg;
 using NHibernate.Caches.CoreDistributedCache;
-using NHibernate.Caches.CoreDistributedCache.Redis;
 using NHibernate.Mapping.Attributes;
 using System.Configuration;
 using System.Reflection;
 using System.Text;
+using Hub.Shared.DataConfiguration;
 
 namespace Hub.Infrastructure.Database.NhManagement
 {

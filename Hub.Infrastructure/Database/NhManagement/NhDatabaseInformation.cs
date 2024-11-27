@@ -1,5 +1,6 @@
 ﻿using Hub.Infrastructure.Autofac;
 using Hub.Infrastructure.Database.Interfaces;
+using Hub.Shared.DataConfiguration;
 using System.Configuration;
 
 namespace Hub.Infrastructure.Database.NhManagement

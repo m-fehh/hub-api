@@ -1,6 +1,7 @@
 ﻿using Hub.Infrastructure.Autofac;
 using Hub.Infrastructure.Database.Interfaces;
 using Hub.Infrastructure.Database.NhManagement.Migrations;
+using Hub.Shared.DataConfiguration;
 using NHibernate;
 using NHibernate.Context;
 using System.Collections.Concurrent;

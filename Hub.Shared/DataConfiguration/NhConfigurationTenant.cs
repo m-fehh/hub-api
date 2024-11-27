@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Hub.Infrastructure.Database.NhManagement
+namespace Hub.Shared.DataConfiguration
 {
     /// <summary>
     /// Classe responsável por armazenar uma coleção de configurações do NHibernate. 
@@ -298,7 +298,7 @@ namespace Hub.Infrastructure.Database.NhManagement
 
         public object Clone()
         {
-            return this.MemberwiseClone();
+            return MemberwiseClone();
         }
     }
 
