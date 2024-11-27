@@ -1,6 +1,6 @@
-﻿using Hub.Infrastructure.MultiTenant;
+﻿using Hub.Shared.Interfaces.MultiTenant;
 
-namespace Hub.Infrastructure.Database.Models
+namespace Hub.Domain.Entities.Admin
 {
     public class Tenants : ITenantInfo
     {

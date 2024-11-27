@@ -21,6 +21,8 @@ using Hub.Infrastructure.Extensions;
 using Hub.Infrastructure.Localization;
 using Hub.Infrastructure.Database.Interfaces;
 using Hub.Infrastructure.Seeders;
+using Hub.Shared.Interfaces.MultiTenant;
+using Hub.Infrastructure.Database.NhManagement;
 
 namespace Hub.Infrastructure
 {
@@ -144,15 +146,31 @@ namespace Hub.Infrastructure
                 {
                     ormConfiguration.Configure();
                 }
-
-                // Registra e executa todos os seeders
-                //Resolve<SeederManager>().SeedAllAsync();
             });
 
             if (_containerManager.Container != null)
             {
                 initializeAction();
             }
+        }
+
+        /// <summary>
+        /// Inicia um novo escopo para que o sistema tenha uma sessão stateless aberta para athread atual
+        /// </summary>
+        /// <returns></returns>
+        public static IDisposable BeginStatelessSessionScope()
+        {
+            return Resolve<INhStatelessSessionScope>();
+        }
+
+        /// <summary>
+        /// Permite conectar em um banco de dados réplica (somente leitura), se houver.
+        /// Nenhuma operação de escrita poderá ser efetuada dentro desse escopo (o banco de dados não permite)
+        /// </summary>
+        /// <returns></returns>
+        public static IDisposable BeginReadOnlySessionScope()
+        {
+            return Resolve<INhReadOnlySessionScope>().Start();
         }
 
         public static IDisposable BeginIgnoreTenantConfigs(bool ignoreTenantConfigs = true)

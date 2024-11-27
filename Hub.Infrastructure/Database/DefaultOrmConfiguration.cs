@@ -1,6 +1,7 @@
 ﻿using Dapper;
+using Hub.Domain.Entities.Admin;
 using Hub.Infrastructure.Autofac;
-using Hub.Infrastructure.Database.Models;
+using Hub.Infrastructure.Database.NhManagement;
 using Microsoft.Data.SqlClient;
 
 namespace Hub.Infrastructure.Database

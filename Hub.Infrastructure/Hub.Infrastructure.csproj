@@ -15,6 +15,10 @@
     <PackageReference Include="FluentMigrator" Version="6.2.0" />
     <PackageReference Include="MediatR" Version="11.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="NHibernate" Version="5.3.17" />
     <PackageReference Include="NHibernate.Caches.CoreDistributedCache" Version="5.7.0" />
@@ -23,11 +27,11 @@
     <PackageReference Include="NHibernateProfiler.Appender" Version="6.0.6047" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="9.0.0" />
     <PackageReference Include="System.Drawing.Common" Version="9.0.0" />
+    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.2.13" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Hub.Domain\Hub.Domain.csproj" />
-    <ProjectReference Include="..\Hub.Shared\Hub.Shared.csproj" />
   </ItemGroup>
 
 </Project>

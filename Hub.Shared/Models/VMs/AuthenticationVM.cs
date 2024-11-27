@@ -1,4 +1,4 @@
-﻿namespace Hub.Shared.Models
+﻿namespace Hub.Shared.Models.VMs
 {
     public class AuthenticationVM
     {

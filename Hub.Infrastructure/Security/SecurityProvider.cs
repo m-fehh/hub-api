@@ -1,4 +1,4 @@
-﻿using Hub.Shared.Models;
+﻿using Hub.Shared.Models.VMs;
 
 namespace Hub.Infrastructure.Security
 {
