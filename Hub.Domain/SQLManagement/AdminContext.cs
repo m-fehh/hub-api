@@ -5,7 +5,7 @@ namespace Hub.Domain.SQLManagement
 {
     public class AdminContext : DbContext
     {
-        public DbSet<Tenants> Tenants { get; set; } = null!;
+        public DbSet<Tenant> Tenants { get; set; } = null!;
 
         public AdminContext(DbContextOptions<AdminContext> options) : base(options) { }
 

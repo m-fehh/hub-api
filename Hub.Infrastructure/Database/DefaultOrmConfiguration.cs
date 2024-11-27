@@ -85,7 +85,7 @@ namespace Hub.Infrastructure.Database
                         connection.Execute(createTableQuery);
 
                         // Após a criação da tabela, cria um cliente fake
-                        var defaultTenant = new Tenants
+                        var defaultTenant = new Tenant
                         {
                             Name = "Trainly Base",
                             Subdomain = "base.trainly",
@@ -95,7 +95,7 @@ namespace Hub.Infrastructure.Database
                         connection.Execute(insertQuery, new { defaultTenant.Name, defaultTenant.Subdomain });
 
                         // Adiciona o fake client à lista
-                        var clients = new List<Tenants> { defaultTenant };
+                        var clients = new List<Tenant> { defaultTenant };
 
                         // Processo de configuração continua com os dados do fakeClient
                         foreach (var client in clients)
@@ -149,11 +149,11 @@ namespace Hub.Infrastructure.Database
                         // Se a tabela já existir, faz a consulta normalmente
                         var query = "select Id, Name, Subdomain, Logo from adm.Teams";
 
-                        var clients = connection.Query<Tenants>(query).ToList();
+                        var clients = connection.Query<Tenant>(query).ToList();
 
                         if (clients.Count == 0)
                         {
-                            var defaultTenant = new Tenants
+                            var defaultTenant = new Tenant
                             {
                                 Name = "Trainly Base",
                                 Subdomain = "base.trainly",

@@ -2,7 +2,6 @@
 using Autofac.Core;
 using AutoMapper;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System.Collections.Specialized;
 using System.Globalization;
 using System.Reflection;
@@ -16,11 +15,9 @@ using Hub.Infrastructure.Helpers;
 using Hub.Infrastructure.MultiTenant;
 using System.Configuration;
 using Microsoft.EntityFrameworkCore;
-using Hub.Domain;
 using Hub.Infrastructure.Extensions;
 using Hub.Infrastructure.Localization;
 using Hub.Infrastructure.Database.Interfaces;
-using Hub.Infrastructure.Seeders;
 using Hub.Shared.Interfaces.MultiTenant;
 using Hub.Infrastructure.Database.NhManagement;
 

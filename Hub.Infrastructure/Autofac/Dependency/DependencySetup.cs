@@ -111,21 +111,37 @@ namespace Hub.Infrastructure.Autofac.Dependency
             // Registro do DbContext (AdminContext) com ConnectionString
 
 
-            builder.Register(c =>
-            {
-                var cs = Engine.ConnectionString("adm");
-                var optionsBuilder = new DbContextOptionsBuilder<AdminContext>().UseSqlServer(cs);
-                return new AdminContext(optionsBuilder.Options);
-            }).AsSelf().InstancePerLifetimeScope();
-
             //builder.Register(c =>
             //{
-            //    var cs = Engine.ConnectionString("default");
-            //    var tenantConfiguration = Singleton<NhConfigurationTenant>.Instance.Mapeamentos[0].ConfigurationTenants[0];
-
-            //    var optionsBuilder = new DbContextOptionsBuilder<TenantMigrationContext>().UseSqlServer(cs);
-            //    return new TenantMigrationContext(tenantConfiguration, optionsBuilder.Options);
+            //    var cs = Engine.ConnectionString("adm");
+            //    var optionsBuilder = new DbContextOptionsBuilder<AdminContext>().UseSqlServer(cs);
+            //    return new AdminContext(optionsBuilder.Options);
             //}).AsSelf().InstancePerLifetimeScope();
+
+
+            // Registro do DbContextOptions para AdminContext
+            builder.Register(c =>
+            {
+                var cs = Engine.ConnectionString("adm");  // Conexão para AdminContext
+                var optionsBuilder = new DbContextOptionsBuilder<AdminContext>()
+                    .UseSqlServer(cs);  // Usando SQL Server, ajuste conforme necessário
+                return optionsBuilder.Options;  // Retorna a instância de DbContextOptions<AdminContext>
+            }).As<DbContextOptions<AdminContext>>().InstancePerLifetimeScope();
+
+            // Registro do DbContextOptions para TenantMigrationContext
+            builder.Register(c =>
+            {
+                var cs = Engine.ConnectionString("default");  // Conexão para TenantMigrationContext
+                var optionsBuilder = new DbContextOptionsBuilder<TenantMigrationContext>()
+                    .UseSqlServer(cs);  // Usando SQL Server, ajuste conforme necessário
+                return optionsBuilder.Options;  // Retorna a instância de DbContextOptions<TenantMigrationContext>
+            }).As<DbContextOptions<TenantMigrationContext>>().InstancePerLifetimeScope();
+
+            // Registro do TenantService
+            builder.RegisterType<TenantService>().AsSelf().InstancePerLifetimeScope();
+
+
+
 
             // request & notification handlers
             builder.Register<ServiceFactory>(context =>

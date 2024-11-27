@@ -13,6 +13,10 @@
 
         string Subdomain { get; set; }
 
+        string Schema { get; set; }
+
+        bool IsActive { get; set; }
+
         string CultureName { get; set; }
     }
 
@@ -22,8 +26,15 @@
     public class TenantInfo : ITenantInfo
     {
         public long Id { get; set; }
+
         public string Name { get; set; }
+
         public string Subdomain { get; set; }
+
+        public string Schema { get; set; } 
+
+        public bool IsActive { get; set; }  
+
         public string CultureName { get; set; }
     }
 }

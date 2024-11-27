@@ -43,7 +43,7 @@ builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
         csb: new ConnectionStringBaseVM()
         {
             ConnectionStringBaseSchema = "sch",
-            ConnectionStringNhAssembly = "Hub.Core.dll"
+            ConnectionStringNhAssembly = "Hub.API.dll"
         });
 });
 

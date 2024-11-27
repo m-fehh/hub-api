@@ -17,20 +17,19 @@ namespace Hub.Domain.Entities.SQLManagement
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.HasDefaultSchema(_schema);
+            modelBuilder.HasDefaultSchema(_schema); 
         }
 
         public override int SaveChanges()
         {
-            EnsureSchemaExists();
+            EnsureSchemaExists(); 
             return base.SaveChanges();
         }
 
         private void EnsureSchemaExists()
         {
             var schemaExistsQuery = $"IF NOT EXISTS (SELECT * FROM sys.schemas WHERE name = '{_schema}') BEGIN EXEC('CREATE SCHEMA {_schema}'); END";
-            Database.ExecuteSqlRaw(schemaExistsQuery);
+            Database.ExecuteSqlRaw(schemaExistsQuery); 
         }
     }
-
 }
