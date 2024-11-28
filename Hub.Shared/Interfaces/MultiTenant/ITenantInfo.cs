@@ -13,8 +13,6 @@
 
         string Subdomain { get; set; }
 
-        string SchemaName { get; set; }
-
         bool IsActive { get; set; }
 
         string CultureName { get; set; }
@@ -30,8 +28,6 @@
         public string Name { get; set; }
 
         public string Subdomain { get; set; }
-
-        public string SchemaName { get; set; } 
 
         public bool IsActive { get; set; }  
 

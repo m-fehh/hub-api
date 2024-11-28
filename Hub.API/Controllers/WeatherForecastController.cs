@@ -1,12 +1,13 @@
-using Hub.Domain.Entities.Logger;
+using Hub.API.Configuration;
+using Hub.Domain.Entities.Admin;
 using Hub.Infrastructure;
-using Hub.Infrastructure.Database;
+using Hub.Infrastructure.Database.NhManagement;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Hub.API.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("{tenantName}/api/[controller]")]
     public class WeatherForecastController : ControllerBase
     {
         private static readonly string[] Summaries = new[]
@@ -21,16 +22,17 @@ namespace Hub.API.Controllers
             _logger = logger;
         }
 
-        [HttpGet(Name = "GetWeatherForecast")]
-        public IEnumerable<WeatherForecast> Get()
+        [HttpGet("check-tenant")]
+        public IActionResult CheckTenant()
         {
-            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
-            {
-                Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                TemperatureC = Random.Shared.Next(-20, 55),
-                Summary = Summaries[Random.Shared.Next(Summaries.Length)]
-            })
-            .ToArray();
+            var tenantName = Engine.Resolve<ITenantContext>().TenantName;
+            using (Engine.BeginLifetimeScope(tenantName))
+            { 
+                var all = Engine.Resolve<IRepository<Tenants>>().Table.ToList();
+            }
+
+            // Retorna um HTTP 200 OK vazio
+            return Ok();
         }
     }
 }

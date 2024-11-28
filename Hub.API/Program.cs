@@ -1,15 +1,14 @@
-using Autofac;
 using Hub.Infrastructure.Database;
 using Hub.Infrastructure.Tasks;
 using Hub.Infrastructure;
 using System.Reflection;
 using Hub.Infrastructure.Autofac.Dependency;
-using Hub.API;
-using Autofac.Extensions.DependencyInjection;
 using Hub.Infrastructure.Localization;
 using Hub.Infrastructure.Resources;
 using Hub.Application.Resource;
 using Hub.API.Configuration;
+using Autofac.Extensions.DependencyInjection;
+using Autofac;
 
 var builder = WebApplication.CreateBuilder();
 
@@ -24,13 +23,13 @@ if (builder.Environment.IsDevelopment())
 }
 
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+builder.Services.AddSingleton<ITenantContext, TenantContext>();
 
 builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
 {
     // Inicializa o Engine com a configuração do HubProvider e outros parâmetros
     Engine.Initialize(
         executingAssembly: Assembly.GetExecutingAssembly(),
-        nameProvider: new HubProvider(), 
         tasks: new List<IStartupTask>()
         {
             new StartupTask(),
