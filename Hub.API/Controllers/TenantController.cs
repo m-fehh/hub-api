@@ -1,6 +1,4 @@
-﻿using Hub.Infrastructure;
-using Hub.Infrastructure.Database;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace Hub.API.Controllers
 {
@@ -14,7 +12,7 @@ namespace Hub.API.Controllers
         {
             //_tenantService.MigrateTenants();
 
-            Engine.Resolve<TenantService>().MigrateTenants();
+            //Engine.Resolve<TenantService>().MigrateTenants();
 
             return Ok("Migrações aplicadas com sucesso.");
         }

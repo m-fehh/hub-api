@@ -1,19 +1,14 @@
 ﻿using Autofac;
 using Autofac.Core;
 using Autofac.Core.Registration;
-using Hub.Domain.Entities.SQLManagement;
-using Hub.Domain.SQLManagement;
 using Hub.Infrastructure.Database;
 using Hub.Infrastructure.Database.NhManagement;
 using Hub.Infrastructure.Logger.Interfaces;
 using Hub.Infrastructure.MultiTenant;
 using Hub.Infrastructure.Nominator;
-using Hub.Shared.DataConfiguration;
 using Hub.Shared.Interfaces.MultiTenant;
 using Hub.Shared.Log;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
-using NHibernate.MultiTenancy;
 
 namespace Hub.Infrastructure.Autofac.Dependency
 {
@@ -21,17 +16,36 @@ namespace Hub.Infrastructure.Autofac.Dependency
     {
         public void Register(ContainerBuilder builder)
         {
-            builder.RegisterType<LogManager>().As<ILogManager>().SingleInstance();
 
             builder.RegisterType<NominatorManager>().As<INominatorManager>().SingleInstance();
 
-            //builder.RegisterType<SendMail>().As<ISendMail>().SingleInstance();
-
+            builder.RegisterType<LogManager>().As<ILogManager>().SingleInstance();
             builder.RegisterType<IgnoreLogScope>().AsSelf().InstancePerLifetimeScope();
 
             builder.RegisterType<IgnoreModificationControl>().AsSelf().InstancePerLifetimeScope();
 
             builder.RegisterType<TenantLifeTimeScope>().AsSelf().InstancePerLifetimeScope();
+
+            builder.RegisterType<NhRepository>().AsImplementedInterfaces();
+            builder.RegisterGeneric(typeof(NhRepository<>)).As(typeof(IRepository<>)).OnActivating(ActivingRepository);
+
+            builder.RegisterType<NhDatabaseInformation>().As<IDatabaseInformation>();
+            builder.RegisterType<NhLifetimeScopeSession>().As<ILifetimeScopeSession>().InstancePerLifetimeScope();
+            builder.RegisterType<NhStartSessionFactory>().As<INhStartSessionFactory>().SingleInstance();
+            builder.RegisterType<NhStatelessSessionScope>().As<INhStatelessSessionScope>();
+
+            builder.RegisterType<DefaultOrmConfiguration>().As<IOrmConfiguration>().SingleInstance();
+            builder.RegisterType<DefaultOrmConfiguration>().AsSelf().SingleInstance();
+
+            builder.RegisterType<DefaultTenantManager>().As<ITenantManager>().SingleInstance();
+
+            builder.RegisterType<ConnectionStringBaseConfigurator>().AsSelf().SingleInstance();
+
+            #region AINDA NAO CRIADO 
+            //builder.RegisterType<NhReadOnlySessionScope>().As<INhReadOnlySessionScope>().InstancePerLifetimeScope();
+
+            //builder.RegisterType<CosmosDbConnectionProvider>().As<INoSqlConnectionProvider>().SingleInstance();
+            //builder.RegisterType<SendMail>().As<ISendMail>().SingleInstance();
 
             //builder.RegisterType<AzureCloudStorageManager>().As<IAzureCloudStorageManager>().SingleInstance();
             //builder.RegisterType<AzureCloudStorageManager>().AsSelf().SingleInstance();
@@ -46,23 +60,7 @@ namespace Hub.Infrastructure.Autofac.Dependency
 
             //builder.RegisterGeneric(typeof(AzureTableStorageManager<>)).AsSelf().InstancePerLifetimeScope();
 
-            builder.RegisterType<NhRepository>().AsImplementedInterfaces();
-            builder.RegisterGeneric(typeof(NhRepository<>)).As(typeof(IRepository<>)).OnActivating(ActivingRepository);
-            //builder.RegisterGeneric(typeof(SchNoSqlRepository<>)).AsSelf();
-
-            builder.RegisterType<NhDatabaseInformation>().As<IDatabaseInformation>();
-
-            builder.RegisterType<NhLifetimeScopeSession>().As<ILifetimeScopeSession>().InstancePerLifetimeScope();
-
-            builder.RegisterType<NhStartSessionFactory>().As<INhStartSessionFactory>().SingleInstance();
-
-            builder.RegisterType<NhStatelessSessionScope>().As<INhStatelessSessionScope>();
-
-            //builder.RegisterType<CosmosDbConnectionProvider>().As<INoSqlConnectionProvider>().SingleInstance();
             //builder.RegisterType<CosmosDbConnectionProvider>().AsSelf().SingleInstance();
-
-            builder.RegisterType<DefaultOrmConfiguration>().As<IOrmConfiguration>().SingleInstance();
-            builder.RegisterType<DefaultOrmConfiguration>().AsSelf().SingleInstance();
 
             //builder.RegisterType<ApiRequestService>().AsImplementedInterfaces().AsSelf().SingleInstance();
 
@@ -76,7 +74,6 @@ namespace Hub.Infrastructure.Autofac.Dependency
             //builder.RegisterType<EngineInitializationParametersBuilder>().AsSelf();
 
             //builder.RegisterType<CacheManager>().AsSelf().SingleInstance();
-            builder.RegisterType<DefaultTenantManager>().As<ITenantManager>().SingleInstance();
 
             //builder.RegisterType<CurrentTimezone>().As<ICurrentTimezone>().SingleInstance();
 
@@ -96,9 +93,6 @@ namespace Hub.Infrastructure.Autofac.Dependency
 
             //builder.RegisterGeneric(typeof(ModelEntityMapper<,>)).AsSelf().InstancePerLifetimeScope();
 
-            builder.RegisterType<NhReadOnlySessionScope>().As<INhReadOnlySessionScope>().InstancePerLifetimeScope();
-
-            builder.RegisterType<ConnectionStringBaseConfigurator>().AsSelf().SingleInstance();
 
             //builder.RegisterType<StringEncrypter>().As<IStringEncrypter>().SingleInstance();
 
@@ -106,44 +100,10 @@ namespace Hub.Infrastructure.Autofac.Dependency
 
             //builder.RegisterType<Mediator>().As<IMediator>().SingleInstance();
 
-            //builder.RegisterType<BackgroundJobManager>().AsSelf().InstancePerLifetimeScope();
+            //builder.RegisterType<BackgroundJobManager>().AsSelf().InstancePerLifetimeScope(); 
 
-            // Registro do DbContext (AdminContext) com ConnectionString
+            #endregion
 
-
-            //builder.Register(c =>
-            //{
-            //    var cs = Engine.ConnectionString("adm");
-            //    var optionsBuilder = new DbContextOptionsBuilder<AdminContext>().UseSqlServer(cs);
-            //    return new AdminContext(optionsBuilder.Options);
-            //}).AsSelf().InstancePerLifetimeScope();
-
-
-            // Registro do DbContextOptions para AdminContext
-            builder.Register(c =>
-            {
-                var cs = Engine.ConnectionString("adm");  // Conexão para AdminContext
-                var optionsBuilder = new DbContextOptionsBuilder<AdminContext>()
-                    .UseSqlServer(cs);  // Usando SQL Server, ajuste conforme necessário
-                return optionsBuilder.Options;  // Retorna a instância de DbContextOptions<AdminContext>
-            }).As<DbContextOptions<AdminContext>>().InstancePerLifetimeScope();
-
-            // Registro do DbContextOptions para TenantMigrationContext
-            builder.Register(c =>
-            {
-                var cs = Engine.ConnectionString("default");  // Conexão para TenantMigrationContext
-                var optionsBuilder = new DbContextOptionsBuilder<TenantMigrationContext>()
-                    .UseSqlServer(cs);  // Usando SQL Server, ajuste conforme necessário
-                return optionsBuilder.Options;  // Retorna a instância de DbContextOptions<TenantMigrationContext>
-            }).As<DbContextOptions<TenantMigrationContext>>().InstancePerLifetimeScope();
-
-            // Registro do TenantService
-            builder.RegisterType<TenantService>().AsSelf().InstancePerLifetimeScope();
-
-
-
-
-            // request & notification handlers
             builder.Register<ServiceFactory>(context =>
             {
                 var c = context.Resolve<IComponentContext>();

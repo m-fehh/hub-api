@@ -14,7 +14,6 @@ using Hub.Infrastructure.Tasks;
 using Hub.Infrastructure.Helpers;
 using Hub.Infrastructure.MultiTenant;
 using System.Configuration;
-using Microsoft.EntityFrameworkCore;
 using Hub.Infrastructure.Extensions;
 using Hub.Infrastructure.Localization;
 using Hub.Infrastructure.Database.Interfaces;
@@ -160,15 +159,6 @@ namespace Hub.Infrastructure
             return Resolve<INhStatelessSessionScope>();
         }
 
-        /// <summary>
-        /// Permite conectar em um banco de dados réplica (somente leitura), se houver.
-        /// Nenhuma operação de escrita poderá ser efetuada dentro desse escopo (o banco de dados não permite)
-        /// </summary>
-        /// <returns></returns>
-        public static IDisposable BeginReadOnlySessionScope()
-        {
-            return Resolve<INhReadOnlySessionScope>().Start();
-        }
 
         public static IDisposable BeginIgnoreTenantConfigs(bool ignoreTenantConfigs = true)
         {

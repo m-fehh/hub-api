@@ -13,7 +13,7 @@
 
         string Subdomain { get; set; }
 
-        string Schema { get; set; }
+        string SchemaName { get; set; }
 
         bool IsActive { get; set; }
 
@@ -31,7 +31,7 @@
 
         public string Subdomain { get; set; }
 
-        public string Schema { get; set; } 
+        public string SchemaName { get; set; } 
 
         public bool IsActive { get; set; }  
 

@@ -8,17 +8,17 @@ using System.Collections.Concurrent;
 
 namespace Hub.Infrastructure.Database.NhManagement
 {
-    public enum ESessionMode
-    {
-        Normal = 1,
-        ReadOnly = 2
-    }
-
     internal static class NhSessionProvider
     {
         static NhSessionProvider()
         {
             SessionMode.Value = ESessionMode.Normal;
+        }
+
+        public enum ESessionMode
+        {
+            Normal = 1,
+            ReadOnly = 2
         }
 
         #region Private Data
@@ -41,6 +41,8 @@ namespace Hub.Infrastructure.Database.NhManagement
 
         public static AsyncLocal<ESessionMode> SessionMode = new AsyncLocal<ESessionMode>();
 
+
+
         /// <summary>
         /// Retorna a sessão do NHibernate atual do usuário. Se não existir, criará uma nova e a armazenará num dicionário de sessões.
         /// </summary>
@@ -53,41 +55,23 @@ namespace Hub.Infrastructure.Database.NhManagement
                 _profilerInicialized = true;
             }
 
-            if (SessionMode.Value == ESessionMode.ReadOnly)
+            ISessionFactory factory = GetSessionFactory(tenantName);
+
+            if (!CurrentSessionContext.HasBind(factory))
             {
-                if (ReadOnlySession.Value != null)
-                {
-                    return ReadOnlySession.Value;
-                }
-                else
-                {
-                    ISessionFactory factory = GetSessionFactory(tenantName);
+                ISession session = NewSession(factory);
 
-                    ReadOnlySession.Value = NewSession(factory);
+                CurrentSessionContext.Bind(session);
 
-                    return ReadOnlySession.Value;
-                }
+                NhGlobalData.CloseCurrentSession = CloseCurrentSession;
+
+                NhGlobalData.CloseCurrentFactory = CloseCurrentFactory;
+
+                return session;
             }
             else
             {
-                ISessionFactory factory = GetSessionFactory(tenantName);
-
-                if (!CurrentSessionContext.HasBind(factory))
-                {
-                    ISession session = NewSession(factory);
-
-                    CurrentSessionContext.Bind(session);
-
-                    NhGlobalData.CloseCurrentSession = CloseCurrentSession;
-
-                    NhGlobalData.CloseCurrentFactory = CloseCurrentFactory;
-
-                    return session;
-                }
-                else
-                {
-                    return factory.GetCurrentSession();
-                }
+                return factory.GetCurrentSession();
             }
         }
 
@@ -96,29 +80,13 @@ namespace Hub.Infrastructure.Database.NhManagement
         /// </summary>
         public static void CloseCurrentSession()
         {
-            if (SessionMode.Value == ESessionMode.ReadOnly)
+            ISessionFactory factory = GetSessionFactory(createIfNotExists: false);
+
+            if (factory == null) return;
+
+            if (CurrentSessionContext.HasBind(factory))
             {
-                if (ReadOnlySession.Value != null)
-                {
-                    ReadOnlySession.Value.Close();
-
-                    ReadOnlySession.Value = null;
-                }
-            }
-            else
-            {
-                ISessionFactory factory = GetSessionFactory(createIfNotExists: false);
-
-                if (factory == null) return;
-
-                if (CurrentSessionContext.HasBind(factory))
-                {
-                    factory.GetCurrentSession().Clear();
-
-                    //var session = CurrentSessionContext.Unbind(factory);
-
-                    //session.Close();
-                }
+                factory.GetCurrentSession().Clear();
             }
         }
 
@@ -162,8 +130,6 @@ namespace Hub.Infrastructure.Database.NhManagement
                 name = tenantName;
             }
 
-            name = $"{name}{(SessionMode.Value == ESessionMode.ReadOnly ? "-readOnly" : "")}";
-
             if (!_sessionFactories.ContainsKey(name))
             {
                 lock (lockerForStartup)
@@ -193,19 +159,16 @@ namespace Hub.Infrastructure.Database.NhManagement
                                 Thread.Sleep(100);
                             }
 
-                            if (SessionMode.Value == ESessionMode.Normal)
-                            {
-                                IMigrationRunner migrationRunner = null;
+                            IMigrationRunner migrationRunner = null;
 
-                                if (Engine.TryResolve<IMigrationRunner>(out migrationRunner))
+                            if (Engine.TryResolve<IMigrationRunner>(out migrationRunner))
+                            {
+                                lock (_locker)
                                 {
-                                    lock (_locker)
+                                    if (!tenantExecuted.Contains(name))
                                     {
-                                        if (!tenantExecuted.Contains(name))
-                                        {
-                                            tenantExecuted.Add(name);
-                                            migrationRunner.MigrateToLatest();
-                                        }
+                                        tenantExecuted.Add(name);
+                                        migrationRunner.MigrateToLatest();
                                     }
                                 }
                             }
@@ -287,16 +250,16 @@ namespace Hub.Infrastructure.Database.NhManagement
                         }
                     }
 
-                    if (returnInfo == null && SessionMode.Value == ESessionMode.ReadOnly)
-                    {
-                        //aqui podemos estar em um escopo da aplicação "read-only" mas não ter configurações read-only no web.config
-                        //sendo assim, pega as configurações normais mesmo (nem todo cliente terá um banco de dados read-only exclusivo).
-                        tname = tname.Replace("-readOnly", "");
-                    }
-                    else
-                    {
-                        skip = true;
-                    }
+                    //if (returnInfo == null)
+                    //{
+                    //    tname = tname.Replace("-readOnly", "");
+                    //}
+                    //else
+                    //{
+                    //    skip = true;
+                    //}
+
+                    skip = true;
                 }
 
                 return returnInfo;

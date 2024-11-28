@@ -1,9 +1,8 @@
 ﻿using Dapper;
 using Hub.Domain.Entities.Admin;
 using Hub.Infrastructure.Autofac;
-using Hub.Infrastructure.Database.NhManagement;
 using Hub.Shared.DataConfiguration;
-using Microsoft.Data.SqlClient;
+using System.Data.SqlClient;
 
 namespace Hub.Infrastructure.Database
 {
@@ -85,7 +84,7 @@ namespace Hub.Infrastructure.Database
                         connection.Execute(createTableQuery);
 
                         // Após a criação da tabela, cria um cliente fake
-                        var defaultTenant = new Tenant
+                        var defaultTenant = new Tenants
                         {
                             Name = "Trainly Base",
                             Subdomain = "base.trainly",
@@ -95,7 +94,7 @@ namespace Hub.Infrastructure.Database
                         connection.Execute(insertQuery, new { defaultTenant.Name, defaultTenant.Subdomain });
 
                         // Adiciona o fake client à lista
-                        var clients = new List<Tenant> { defaultTenant };
+                        var clients = new List<Tenants> { defaultTenant };
 
                         // Processo de configuração continua com os dados do fakeClient
                         foreach (var client in clients)
@@ -105,7 +104,6 @@ namespace Hub.Infrastructure.Database
                                 using (Engine.BeginIgnoreTenantConfigs(false))
                                 {
                                     var cs = Engine.ConnectionString("default");
-                                    var csReadOnly = Engine.ConnectionString("readOnly");
 
                                     map.ConfigurationTenants.Add(new NhConfigurationData
                                     {
@@ -120,26 +118,6 @@ namespace Hub.Infrastructure.Database
                                         SchemaDefault = $"{csb.ConnectionStringBaseSchema}{client.Id}",
                                         CacheProvider = "CoreDistributedCacheProvider"
                                     });
-
-                                    //Se houver uma connection string diferenciada para read only, então adiciona um item novo na coleção.
-                                    //Isso fará com que o construtor de fábricas de sessões consiga pegar a connection string personalizada e criar essa nova conexão.
-                                    //Agora, se for a mesma connection string (ou não existir) não adiciona nada que o provedor de fábricas vai se virar (NhSessionFactoryProvider)
-                                    if (!string.IsNullOrEmpty(csReadOnly) || csReadOnly != cs)
-                                    {
-                                        map.ConfigurationTenants.Add(new NhConfigurationData
-                                        {
-                                            TenantId = $"{client.Subdomain}-readOnly",
-                                            ConnectionString = csReadOnly,
-                                            ConnectionProvider = "NHibernate.Connection.DriverConnectionProvider",
-                                            ConnectionDriver = "NHibernate.Driver.MicrosoftDataSqlClientDriver",
-                                            Dialect = "Hub.Infrastructure.Database.NhManagement.FMKSQLDIalect, Hub.Infrastructure",
-                                            CurrentSessionContext = "async_local",
-                                            UseSecondLevelCache = "false",
-                                            UseQueryCache = "false",
-                                            SchemaDefault = $"{csb.ConnectionStringBaseSchema}{client.Id}",
-                                            CacheProvider = "CoreDistributedCacheProvider"
-                                        });
-                                    }
                                 }
                             }
                         }
@@ -149,11 +127,11 @@ namespace Hub.Infrastructure.Database
                         // Se a tabela já existir, faz a consulta normalmente
                         var query = "select Id, Name, Subdomain, Logo from adm.Teams";
 
-                        var clients = connection.Query<Tenant>(query).ToList();
+                        var clients = connection.Query<Tenants>(query).ToList();
 
                         if (clients.Count == 0)
                         {
-                            var defaultTenant = new Tenant
+                            var defaultTenant = new Tenants
                             {
                                 Name = "Trainly Base",
                                 Subdomain = "base.trainly",
@@ -172,7 +150,6 @@ namespace Hub.Infrastructure.Database
                                 using (Engine.BeginIgnoreTenantConfigs(false))
                                 {
                                     var cs = Engine.ConnectionString("default");
-                                    var csReadOnly = Engine.ConnectionString("readOnly");
 
                                     map.ConfigurationTenants.Add(new NhConfigurationData
                                     {
@@ -187,26 +164,6 @@ namespace Hub.Infrastructure.Database
                                         SchemaDefault = $"{csb.ConnectionStringBaseSchema}{client.Id}",
                                         CacheProvider = "CoreDistributedCacheProvider"
                                     });
-
-                                    //Se houver uma connection string diferenciada para read only, então adiciona um item novo na coleção.
-                                    //Isso fará com que o construtor de fábricas de sessões consiga pegar a connection string personalizada e criar essa nova conexão.
-                                    //Agora, se for a mesma connection string (ou não existir) não adiciona nada que o provedor de fábricas vai se virar (NhSessionFactoryProvider)
-                                    if (!string.IsNullOrEmpty(csReadOnly) || csReadOnly != cs)
-                                    {
-                                        map.ConfigurationTenants.Add(new NhConfigurationData
-                                        {
-                                            TenantId = $"{client.Subdomain}-readOnly",
-                                            ConnectionString = csReadOnly,
-                                            ConnectionProvider = "NHibernate.Connection.DriverConnectionProvider",
-                                            ConnectionDriver = "NHibernate.Driver.MicrosoftDataSqlClientDriver",
-                                            Dialect = "Hub.Infrastructure.Database.NhManagement.FMKSQLDIalect, Hub.Infrastructure",
-                                            CurrentSessionContext = "async_local",
-                                            UseSecondLevelCache = "false",
-                                            UseQueryCache = "false",
-                                            SchemaDefault = $"{csb.ConnectionStringBaseSchema}{client.Id}",
-                                            CacheProvider = "CoreDistributedCacheProvider"
-                                        });
-                                    }
                                 }
                             }
                         }
