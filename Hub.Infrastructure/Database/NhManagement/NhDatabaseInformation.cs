@@ -10,14 +10,10 @@ namespace Hub.Infrastructure.Database.NhManagement
     /// </summary>
     public interface IDatabaseInformation
     {
-        /// <summary>
-        /// Connection String atual da aplicação
-        /// </summary>
+        // Connection String atual da aplicação
         string ConnectionString(string tenantName = null);
 
-        /// <summary>
-        /// Fornecedor do banco de dados atual da aplicação
-        /// </summary>
+        // Fornecedor do banco de dados atual da aplicação
         string DatabaseSupplier(string tenantName = null);
     }
 
@@ -43,8 +39,8 @@ namespace Hub.Infrastructure.Database.NhManagement
 
             if (info == null)
             {
-                info = Singleton<NhConfigurationTenant>.Instance.Mapeamentos[0].ConfigurationTenants[0];
-                //info = Singleton<NhConfigurationTenant>.Instance.Mapeamentos[0].ConfigurationTenants["default"];
+                //info = Singleton<NhConfigurationTenant>.Instance.Mapeamentos[0].ConfigurationTenants[0];
+                info = Singleton<NhConfigurationTenant>.Instance.Mapeamentos[0].ConfigurationTenants["default"];
             }
 
             var cs = info.ConnectionString;
@@ -74,20 +70,27 @@ namespace Hub.Infrastructure.Database.NhManagement
 
             if (info == null)
             {
-                info = Singleton<NhConfigurationTenant>.Instance.Mapeamentos[0].ConfigurationTenants[0];
-                //info = Singleton<NhConfigurationTenant>.Instance.Mapeamentos[0].ConfigurationTenants["default"];
+                //info = Singleton<NhConfigurationTenant>.Instance.Mapeamentos[0].ConfigurationTenants[0];
+                info = Singleton<NhConfigurationTenant>.Instance.Mapeamentos[0].ConfigurationTenants["default"];
             }
 
-            if (info.ConnectionDriver.IndexOf("NHibernate.Driver.MicrosoftDataSqlClientDriver") >= 0 ||
-                info.ConnectionDriver.IndexOf("SqlAzure") >= 0) return "sqlserver";
+            var driverMappings = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+            {
+                { "NHibernate.Driver.MicrosoftDataSqlClientDriver", "sqlserver" },
+                { "SqlAzure", "sqlserver" },
+                { "Oracle", "oracle" },
+                { "MySql", "mysql" },
+                { "SQLite", "sqlite" },
+                { "SqlServerCe", "sqlceserver" }
+            };
 
-            if (info.ConnectionDriver.IndexOf("Oracle") >= 0) return "oracle";
-
-            if (info.ConnectionDriver.IndexOf("MySql") >= 0) return "mysql";
-
-            if (info.ConnectionDriver.IndexOf("SQLite") >= 0) return "sqlite";
-
-            if (info.ConnectionDriver.IndexOf("SqlServerCe") >= 0) return "sqlceserver";
+            foreach (var mapping in driverMappings)
+            {
+                if (info.ConnectionDriver.Contains(mapping.Key, StringComparison.OrdinalIgnoreCase))
+                {
+                    return mapping.Value;
+                }
+            }
 
             throw new NotImplementedException();
         }

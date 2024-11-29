@@ -3,9 +3,13 @@ using Autofac.Core;
 using Autofac.Core.Registration;
 using Hub.Infrastructure.Database;
 using Hub.Infrastructure.Database.NhManagement;
+using Hub.Infrastructure.Extensions.Generate;
+using Hub.Infrastructure.Lock;
+using Hub.Infrastructure.Lock.Interfaces;
 using Hub.Infrastructure.Logger.Interfaces;
 using Hub.Infrastructure.MultiTenant;
 using Hub.Infrastructure.Nominator;
+using Hub.Infrastructure.Redis;
 using Hub.Shared.Interfaces.MultiTenant;
 using Hub.Shared.Log;
 using MediatR;
@@ -16,8 +20,18 @@ namespace Hub.Infrastructure.Autofac.Dependency
     {
         public void Register(ContainerBuilder builder)
         {
+            builder.RegisterType<RedisService>().AsSelf().SingleInstance();
+            builder.RegisterType<RedisService>().As<IRedisService>().SingleInstance();
+
+            builder.RegisterType<RedLockManager>().AsSelf().SingleInstance();
+            builder.RegisterType<RedLockManager>().As<ILockManager>().SingleInstance();
+
+            builder.RegisterType<VersionManager>().As<IVersionManager>();
+            builder.RegisterType<RandomGeneration>().As<IRandomGeneration>().SingleInstance();
+            builder.RegisterType<StringEncrypter>().As<IStringEncrypter>().SingleInstance();
 
             builder.RegisterType<NominatorManager>().As<INominatorManager>().SingleInstance();
+            builder.RegisterType<DatabaseConnectionProvider>().AsSelf().InstancePerLifetimeScope();
 
             builder.RegisterType<LogManager>().As<ILogManager>().SingleInstance();
             builder.RegisterType<IgnoreLogScope>().AsSelf().InstancePerLifetimeScope();
@@ -50,11 +64,6 @@ namespace Hub.Infrastructure.Autofac.Dependency
             //builder.RegisterType<AzureCloudStorageManager>().As<IAzureCloudStorageManager>().SingleInstance();
             //builder.RegisterType<AzureCloudStorageManager>().AsSelf().SingleInstance();
 
-            //builder.RegisterType<RedisService>().AsSelf().SingleInstance();
-            //builder.RegisterType<RedisService>().As<IRedisService>().SingleInstance();
-
-            //builder.RegisterType<RedLockManager>().AsSelf().SingleInstance();
-            //builder.RegisterType<RedLockManager>().As<ILockManager>().SingleInstance();
 
             //builder.RegisterType<ServiceBusManager>().AsSelf().SingleInstance();
 
@@ -64,7 +73,7 @@ namespace Hub.Infrastructure.Autofac.Dependency
 
             //builder.RegisterType<ApiRequestService>().AsImplementedInterfaces().AsSelf().SingleInstance();
 
-            //builder.RegisterType<RandomGeneration>().As<IRandomGeneration>().SingleInstance();
+            
 
             //builder.RegisterGeneric(typeof(AzureSearchManager<>)).AsSelf().InstancePerLifetimeScope();
             //builder.RegisterType<RequestParametersBuilder>().AsImplementedInterfaces();
@@ -83,7 +92,7 @@ namespace Hub.Infrastructure.Autofac.Dependency
 
             //builder.RegisterGeneric(typeof(MongoRepository<>)).AsSelf().InstancePerLifetimeScope();
 
-            //builder.RegisterType<DatabaseConnectionProvider>().AsSelf().InstancePerLifetimeScope();
+            
 
             //builder.RegisterType<ConfigurationService>().AsSelf();
             //builder.RegisterType<ConfigurationService>().AsImplementedInterfaces();
@@ -94,7 +103,7 @@ namespace Hub.Infrastructure.Autofac.Dependency
             //builder.RegisterGeneric(typeof(ModelEntityMapper<,>)).AsSelf().InstancePerLifetimeScope();
 
 
-            //builder.RegisterType<StringEncrypter>().As<IStringEncrypter>().SingleInstance();
+            
 
             //builder.RegisterType<AccessTokenProvider>().As<IAccessTokenProvider>().SingleInstance();
 
