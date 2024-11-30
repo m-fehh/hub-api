@@ -3,7 +3,6 @@ using Hub.Infrastructure.Database.NhManagement;
 using Hub.Infrastructure;
 using Hub.Shared.Log;
 using NHibernate;
-using Hub.Infrastructure.Database.Interfaces;
 
 namespace Hub.Domain.Database.Runner
 {

@@ -1,5 +1,4 @@
 ﻿using Hub.Infrastructure.Autofac;
-using Hub.Infrastructure.Database.Interfaces;
 using Hub.Infrastructure.Database.NhManagement.Migrations;
 using Hub.Shared.DataConfiguration;
 using NHibernate;
@@ -250,15 +249,6 @@ namespace Hub.Infrastructure.Database.NhManagement
                         }
                     }
 
-                    //if (returnInfo == null)
-                    //{
-                    //    tname = tname.Replace("-readOnly", "");
-                    //}
-                    //else
-                    //{
-                    //    skip = true;
-                    //}
-
                     skip = true;
                 }
 
@@ -290,7 +280,7 @@ namespace Hub.Infrastructure.Database.NhManagement
             if (info == null)
             {
                 mapeamento = Singleton<NhConfigurationTenant>.Instance.Mapeamentos[0];
-                info = mapeamento.ConfigurationTenants["default"];
+                info = mapeamento.ConfigurationTenants["system"];
             }
 
             var cfg = NhConfiguration.Get(info, mapeamento);

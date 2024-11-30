@@ -1,5 +1,8 @@
 ﻿using Autofac;
+using Hub.Domain.Database.Runner;
+using Hub.Infrastructure.Autofac;
 using Hub.Infrastructure.Autofac.Dependency;
+using Hub.Infrastructure.Database.NhManagement.Migrations;
 using Hub.Infrastructure.Localization;
 
 namespace Hub.API.Configuration
@@ -10,6 +13,10 @@ namespace Hub.API.Configuration
         {
             builder.RegisterType<DefaultLocalizationProvider>().As<ILocalizationProvider>().AsSelf();
             builder.RegisterType<HubProvider>().AsSelf().SingleInstance();
+
+            builder.RegisterType<DbMigrator>().AsSelf();
+            builder.RegisterType<MigrationRunner>().As<IMigrationRunner>();
+            builder.RegisterType<VersionManager>().As<IVersionManager>();
         }
 
         public int Order

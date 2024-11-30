@@ -2,7 +2,6 @@
 using Hub.Infrastructure.Autofac;
 using Hub.Infrastructure;
 using Hub.Shared.Interfaces.MultiTenant;
-using Hub.Infrastructure.Database.Interfaces;
 using Hub.Infrastructure.Extensions;
 
 namespace Hub.Domain.Developments.Migrations._2024

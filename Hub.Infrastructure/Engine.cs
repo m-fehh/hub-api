@@ -16,7 +16,6 @@ using Hub.Infrastructure.MultiTenant;
 using System.Configuration;
 using Hub.Infrastructure.Extensions;
 using Hub.Infrastructure.Localization;
-using Hub.Infrastructure.Database.Interfaces;
 using Hub.Shared.Interfaces.MultiTenant;
 using Hub.Infrastructure.Database.NhManagement;
 
@@ -457,9 +456,10 @@ namespace Hub.Infrastructure
                 {
                     tenantName = Singleton<ISchemaNameProvider>.Instance.TenantName();
 
-                    //if (tenantName.Equals("adm", StringComparison.OrdinalIgnoreCase))
-                    if (tenantName.Equals("trainly", StringComparison.OrdinalIgnoreCase))
+                    if (tenantName.Equals("system", StringComparison.OrdinalIgnoreCase))
+                    {
                         tenantName = "";
+                    }
                 }
 
                 if (!string.IsNullOrEmpty(tenantName))

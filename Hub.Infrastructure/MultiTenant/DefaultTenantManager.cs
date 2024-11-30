@@ -1,6 +1,8 @@
-﻿using Hub.Infrastructure.Autofac;
-using Hub.Infrastructure.Database.Interfaces;
+﻿using Dapper;
+using Hub.Infrastructure.Autofac;
+using Hub.Shared.DataConfiguration.Admin;
 using Hub.Shared.Interfaces.MultiTenant;
+using Microsoft.Data.SqlClient;
 
 namespace Hub.Infrastructure.MultiTenant
 {
@@ -11,23 +13,15 @@ namespace Hub.Infrastructure.MultiTenant
     {
         public ITenantInfo GetInfo()
         {
-            var _tenantName = Singleton<ISchemaNameProvider>.Instance.TenantName();
+            var tenantName = Singleton<ISchemaNameProvider>.Instance.TenantName();
 
-            Func<string, Object> fn = (tenantName) =>
+            using (var connection = new SqlConnection(Engine.AppSettings["ConnectionString-adm"]))
             {
-                return new TenantInfo()
-                {
-                    Id = 1, // Id do tenant
-                    Name = "Trainly Base", // Nome do tenant
-                    Subdomain = "base.trainly", // Subdomínio do tenant
-                    CultureName = "en-US" // Cultura do tenant
-                };
-            };
+                var client = connection.QueryFirstOrDefault<Tenants>("SELECT Id, Name, Subdomain, IsActive, CultureName FROM adm.tenants WHERE Subdomain = @tenantName", new { tenantName });
 
-            // Chamada direta da função fn
-            var clientInfo = fn(_tenantName);
-            return (ITenantInfo)clientInfo;
+                return client;
+            }
         }
-
     }
 }
+

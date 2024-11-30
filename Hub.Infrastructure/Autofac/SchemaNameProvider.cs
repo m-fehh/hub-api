@@ -1,12 +1,19 @@
-﻿using Hub.Infrastructure;
-using Hub.Infrastructure.Autofac;
-
-using Hub.Infrastructure.MultiTenant;
+﻿using Hub.Infrastructure.MultiTenant;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Routing;
 
-namespace Hub.API.Configuration
+
+namespace Hub.Infrastructure.Autofac
 {
-    public class HubProvider : SchemaNameProvider
+    public interface ISchemaNameProvider
+    {
+        /// <summary>
+        /// método responsável obter o tenant atual do sistema
+        /// </summary>
+        string TenantName();
+    }
+
+    public class SchemaNameProvider : ISchemaNameProvider
     {
         private static readonly HttpContextAccessor _httpContextAccessor = new HttpContextAccessor();
 
@@ -22,7 +29,7 @@ namespace Hub.API.Configuration
             // Verifica se HttpContext está disponível
             if (_httpContextAccessor.HttpContext == null || _httpContextAccessor.HttpContext.Request == null)
             {
-                return "trainly";
+                return "system";
             }
 
             // Recupera RouteValues do HttpContext
@@ -35,21 +42,7 @@ namespace Hub.API.Configuration
             }
 
 
-            return "trainly";
+            return "system";
         }
-
-        //// Método para pegar o nome do tenant a partir do subdomínio
-        //public string TenantByUrl(string a)
-        //{
-        //    var context = _httpContextAccessor.HttpContext;
-        //    if (context?.Request?.Host != null)
-        //    {
-        //        var host = context.Request.Host.Value;
-        //        var subdomain = host.Split('.')[0]; // Assume que o primeiro subdomínio é o nome do tenant
-        //        return subdomain; // Pode retornar o subdomínio, ou manipular conforme necessário
-        //    }
-
-        //    return null;
-        //}
     }
 }

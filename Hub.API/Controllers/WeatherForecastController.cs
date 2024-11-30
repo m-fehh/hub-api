@@ -1,7 +1,7 @@
 using Hub.API.Configuration;
-using Hub.Domain.Entities.Admin;
 using Hub.Infrastructure;
 using Hub.Infrastructure.Database.NhManagement;
+using Hub.Shared.DataConfiguration.Admin;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Hub.API.Controllers

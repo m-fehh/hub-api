@@ -10,6 +10,7 @@ using Hub.Infrastructure.Logger.Interfaces;
 using Hub.Infrastructure.MultiTenant;
 using Hub.Infrastructure.Nominator;
 using Hub.Infrastructure.Redis;
+using Hub.Infrastructure.Redis.Cache;
 using Hub.Shared.Interfaces.MultiTenant;
 using Hub.Shared.Log;
 using MediatR;
@@ -26,6 +27,7 @@ namespace Hub.Infrastructure.Autofac.Dependency
             builder.RegisterType<RedLockManager>().AsSelf().SingleInstance();
             builder.RegisterType<RedLockManager>().As<ILockManager>().SingleInstance();
 
+            builder.RegisterType<CacheManager>().AsSelf().SingleInstance();
             builder.RegisterType<VersionManager>().As<IVersionManager>();
             builder.RegisterType<RandomGeneration>().As<IRandomGeneration>().SingleInstance();
             builder.RegisterType<StringEncrypter>().As<IStringEncrypter>().SingleInstance();
@@ -82,7 +84,7 @@ namespace Hub.Infrastructure.Autofac.Dependency
             //builder.RegisterType<EngineInitializationParametersBuilder>().AsImplementedInterfaces();
             //builder.RegisterType<EngineInitializationParametersBuilder>().AsSelf();
 
-            //builder.RegisterType<CacheManager>().AsSelf().SingleInstance();
+            
 
             //builder.RegisterType<CurrentTimezone>().As<ICurrentTimezone>().SingleInstance();
 

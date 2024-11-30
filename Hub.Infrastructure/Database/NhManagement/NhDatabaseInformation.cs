@@ -1,5 +1,4 @@
 ﻿using Hub.Infrastructure.Autofac;
-using Hub.Infrastructure.Database.Interfaces;
 using Hub.Shared.DataConfiguration;
 using System.Configuration;
 
@@ -40,7 +39,7 @@ namespace Hub.Infrastructure.Database.NhManagement
             if (info == null)
             {
                 //info = Singleton<NhConfigurationTenant>.Instance.Mapeamentos[0].ConfigurationTenants[0];
-                info = Singleton<NhConfigurationTenant>.Instance.Mapeamentos[0].ConfigurationTenants["default"];
+                info = Singleton<NhConfigurationTenant>.Instance.Mapeamentos[0].ConfigurationTenants["system"];
             }
 
             var cs = info.ConnectionString;
@@ -71,7 +70,7 @@ namespace Hub.Infrastructure.Database.NhManagement
             if (info == null)
             {
                 //info = Singleton<NhConfigurationTenant>.Instance.Mapeamentos[0].ConfigurationTenants[0];
-                info = Singleton<NhConfigurationTenant>.Instance.Mapeamentos[0].ConfigurationTenants["default"];
+                info = Singleton<NhConfigurationTenant>.Instance.Mapeamentos[0].ConfigurationTenants["system"];
             }
 
             var driverMappings = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)

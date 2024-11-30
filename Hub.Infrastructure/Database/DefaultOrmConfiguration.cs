@@ -1,7 +1,7 @@
 ﻿using Dapper;
-using Hub.Domain.Entities.Admin;
 using Hub.Infrastructure.Autofac;
 using Hub.Shared.DataConfiguration;
+using Hub.Shared.DataConfiguration.Admin;
 using System.Data.SqlClient;
 
 namespace Hub.Infrastructure.Database
@@ -66,20 +66,20 @@ namespace Hub.Infrastructure.Database
                     var checkTableQuery = @"
                         SELECT COUNT(*) 
                         FROM INFORMATION_SCHEMA.TABLES 
-                        WHERE TABLE_SCHEMA = 'adm' AND TABLE_NAME = 'Teams'";
+                        WHERE TABLE_SCHEMA = 'adm' AND TABLE_NAME = 'tenants'";
 
                     var tableExists = connection.ExecuteScalar<int>(checkTableQuery) > 0;
 
                     if (!tableExists)
                     {
                         var createTableQuery = @"
-                        CREATE TABLE adm.Teams (
-                            Id BIGINT IDENTITY(1,1) PRIMARY KEY,
-                            Name NVARCHAR(255),
-                            Subdomain NVARCHAR(255),
-                            Logo NVARCHAR(255),
-                            GroupName NVARCHAR(255)
-                        )";
+                            CREATE TABLE adm.tenants (
+                                Id BIGINT IDENTITY(1,1) PRIMARY KEY,
+                                Name NVARCHAR(200) NOT NULL,
+                                Subdomain NVARCHAR(255),
+                                IsActive BIT NOT NULL,
+                                CultureName NVARCHAR(50)
+                            )";
 
                         connection.Execute(createTableQuery);
 
@@ -87,11 +87,13 @@ namespace Hub.Infrastructure.Database
                         var defaultTenant = new Tenants
                         {
                             Name = "Trainly Base",
-                            Subdomain = "base.trainly",
+                            Subdomain = "system",
+                            IsActive = true,
+                            CultureName = "pt-BR"
                         };
 
-                        var insertQuery = "INSERT INTO adm.Teams (Name, Subdomain) VALUES (@Name, @Subdomain)";
-                        connection.Execute(insertQuery, new { defaultTenant.Name, defaultTenant.Subdomain });
+                        var insertQuery = @"INSERT INTO adm.tenants (Name, Subdomain, IsActive, CultureName) VALUES (@Name, @Subdomain, @IsActive, @CultureName)";
+                        connection.Execute(insertQuery, defaultTenant);
 
                         // Adiciona o fake client à lista
                         var clients = new List<Tenants> { defaultTenant };
@@ -125,7 +127,7 @@ namespace Hub.Infrastructure.Database
                     else
                     {
                         // Se a tabela já existir, faz a consulta normalmente
-                        var query = "select Id, Name, Subdomain, Logo from adm.Teams";
+                        var query = "SELECT Id, Name, Subdomain, IsActive, CultureName FROM adm.tenants";
 
                         var clients = connection.Query<Tenants>(query).ToList();
 
@@ -134,11 +136,13 @@ namespace Hub.Infrastructure.Database
                             var defaultTenant = new Tenants
                             {
                                 Name = "Trainly Base",
-                                Subdomain = "base.trainly",
+                                Subdomain = "system",
+                                IsActive = true,
+                                CultureName = "pt-BR"
                             };
 
-                            var insertQuery = "INSERT INTO adm.Teams (Name, Subdomain) VALUES (@Name, @Subdomain)";
-                            connection.Execute(insertQuery, new { defaultTenant.Name, defaultTenant.Subdomain });
+                            var insertQuery = @"INSERT INTO adm.tenants (Name, Subdomain, IsActive, CultureName) VALUES (@Name, @Subdomain, @IsActive, @CultureName)";
+                            connection.Execute(insertQuery, defaultTenant);
 
                             clients.Add(defaultTenant);
                         }

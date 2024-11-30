@@ -2,7 +2,6 @@
 using Hub.Infrastructure.Autofac;
 using Hub.Infrastructure;
 using Hub.Shared.Interfaces.MultiTenant;
-using Hub.Infrastructure.Database.Interfaces;
 
 namespace Hub.Domain.Database.Runner
 {
@@ -15,7 +14,7 @@ namespace Hub.Domain.Database.Runner
             {
                 var schema = Singleton<ISchemaNameProvider>.Instance.TenantName();
 
-                if (schema != "adm")
+                if (schema != "system")
                 {
                     schema = "sch" + Engine.Resolve<ITenantManager>().GetInfo().Id;
                 }

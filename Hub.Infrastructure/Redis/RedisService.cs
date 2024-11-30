@@ -1,5 +1,4 @@
 ﻿using Hub.Infrastructure.Autofac;
-using Hub.Infrastructure.Database.Interfaces;
 using StackExchange.Redis;
 
 namespace Hub.Infrastructure.Redis

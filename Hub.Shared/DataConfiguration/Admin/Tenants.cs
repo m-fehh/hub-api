@@ -2,7 +2,7 @@
 using Hub.Shared.Interfaces;
 using Hub.Shared.Interfaces.MultiTenant;
 
-namespace Hub.Domain.Entities.Admin
+namespace Hub.Shared.DataConfiguration.Admin
 {
     [Class(Table = "tenants")]
     public class Tenants : BaseEntity, ITenantInfo

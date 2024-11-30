@@ -1,7 +1,7 @@
 ﻿using Hub.Infrastructure.Autofac;
 using Hub.Infrastructure.Extensions;
 using Hub.Infrastructure;
-using Hub.Infrastructure.Database.Interfaces;
+
 using Hub.Infrastructure.Database.NhManagement.Migrations;
 using Hub.Infrastructure.Redis;
 using Hub.Infrastructure.Lock;

@@ -1,6 +1,4 @@
-﻿using Hub.Domain;
-
-namespace Hub.Infrastructure.Seeders.Management
+﻿namespace Hub.Infrastructure.Seeders.Management
 {
     public class UserSeeder : ISeeder
     {
