@@ -1,10 +1,9 @@
-﻿using Hub.API.Controllers.Admin;
-using Hub.Infrastructure;
+﻿using Hub.Infrastructure;
 using Hub.Infrastructure.Database.NhManagement.Migrations;
 using Hub.Infrastructure.Extensions;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Hub.API.Controllers
+namespace Hub.API.Controllers.Admin
 {
     public class MigrationController : BaseController
     {

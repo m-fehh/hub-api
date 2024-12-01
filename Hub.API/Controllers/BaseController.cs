@@ -2,7 +2,7 @@
 using Hub.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Hub.API.Controllers.Admin
+namespace Hub.API.Controllers
 {
     /// <summary>
     /// Classe base para todos os controllers que utilizam o contexto do locatário.
