@@ -1,8 +1,8 @@
-﻿using Hub.API.Configuration;
+﻿using Hub.API.Configuration.Context;
 using Hub.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Hub.API.Controllers.Base
+namespace Hub.API.Controllers.Admin
 {
     /// <summary>
     /// Classe base para todos os controllers que utilizam o contexto do locatário.
@@ -15,8 +15,7 @@ namespace Hub.API.Controllers.Base
 
         protected BaseController()
         {
-            TenantName = Engine.Resolve<ITenantContext>().TenantName
-                ?? throw new InvalidOperationException("O nome do locatário não pode ser nulo.");
+            TenantName = Engine.Resolve<ITenantContext>().TenantName;
         }
     }
 }

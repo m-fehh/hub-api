@@ -1,4 +1,4 @@
-﻿namespace Hub.API.Configuration
+﻿namespace Hub.API.Configuration.Context
 {
     public interface ITenantContext
     {

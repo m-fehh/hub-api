@@ -30,7 +30,7 @@ namespace Hub.Domain.Database.Runner
             {
                 redisService.Set("ApplicationVersion", currentAppVersion);
 
-                var lockName = "InitSessionFactory" + Singleton<ISchemaNameProvider>.Instance.TenantName();
+                var lockName = "InitSessionFactory:" + Singleton<ISchemaNameProvider>.Instance.TenantName().FirstCharToUpper();
 
                 using (Engine.Resolve<RedLockManager>().Lock(lockName))
                 {
@@ -45,7 +45,6 @@ namespace Hub.Domain.Database.Runner
                     catch (Exception ex)
                     {
                         redisService.Set("ApplicationVersion", null);
-
                         log4net.LogManager.GetLogger("Sch.SystemInfo").Error("MIGRATION ERROR", ex);
 
                         throw new BusinessException(ex.CreateExceptionString());

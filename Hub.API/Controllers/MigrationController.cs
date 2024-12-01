@@ -1,4 +1,4 @@
-﻿using Hub.API.Controllers.Base;
+﻿using Hub.API.Controllers.Admin;
 using Hub.Infrastructure;
 using Hub.Infrastructure.Database.NhManagement.Migrations;
 using Hub.Infrastructure.Extensions;
@@ -10,7 +10,7 @@ namespace Hub.API.Controllers
     {
         public MigrationController() : base() { }
 
-        [HttpPost("migrate")]
+        [HttpPost("run")]
         public IActionResult RunMigration()
         {
             using (Engine.BeginLifetimeScope(TenantName, true))

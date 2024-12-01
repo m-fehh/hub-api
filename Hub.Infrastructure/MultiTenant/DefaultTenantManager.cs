@@ -13,11 +13,11 @@ namespace Hub.Infrastructure.MultiTenant
     {
         public ITenantInfo GetInfo()
         {
-            var tenantName = Singleton<ISchemaNameProvider>.Instance.TenantName();
+            var subdomain = Singleton<ISchemaNameProvider>.Instance.TenantName();
 
             using (var connection = new SqlConnection(Engine.AppSettings["ConnectionString-adm"]))
             {
-                var client = connection.QueryFirstOrDefault<Tenants>("SELECT Id, Name, Subdomain, IsActive, CultureName FROM adm.tenants WHERE Subdomain = @tenantName", new { tenantName });
+                var client = connection.QueryFirstOrDefault<Tenants>("SELECT Id, Name, Subdomain, IsActive, CultureName FROM adm.tenants WHERE Subdomain = @tenantName", new { subdomain });
 
                 return client;
             }

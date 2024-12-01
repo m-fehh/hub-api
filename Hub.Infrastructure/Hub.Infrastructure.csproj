@@ -15,6 +15,7 @@
     <PackageReference Include="EmailValidation" Version="1.2.0" />
     <PackageReference Include="FluentMigrator" Version="6.2.0" />
     <PackageReference Include="log4net" Version="2.0.12" />
+    <PackageReference Include="MailKit" Version="3.6.0" />
     <PackageReference Include="MediatR" Version="11.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
     <PackageReference Include="Microsoft.AspNetCore.Routing" Version="2.2.2" />
@@ -28,9 +29,11 @@
     <PackageReference Include="NHibernate.Mapping.Attributes" Version="5.1.0" />
     <PackageReference Include="NHibernateProfiler.Appender" Version="6.0.6047" />
     <PackageReference Include="RedLock.net" Version="2.3.2" />
+    <PackageReference Include="SendGrid" Version="9.24.3" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="9.0.0" />
     <PackageReference Include="System.Drawing.Common" Version="9.0.0" />
     <PackageReference Include="System.Linq.Dynamic.Core" Version="1.2.13" />
+    <PackageReference Include="TimeZoneConverter" Version="5.0.0" />
   </ItemGroup>
 
   <ItemGroup>

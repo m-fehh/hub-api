@@ -9,6 +9,7 @@ using Hub.Application.Resource;
 using Hub.API.Configuration;
 using Autofac.Extensions.DependencyInjection;
 using Autofac;
+using Hub.API.Configuration.Context;
 
 var builder = WebApplication.CreateBuilder();
 
@@ -51,6 +52,8 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddAuthorization();
 
 var app = builder.Build();
 

@@ -3,14 +3,19 @@ using Autofac.Core;
 using Autofac.Core.Registration;
 using Hub.Infrastructure.Database;
 using Hub.Infrastructure.Database.NhManagement;
+using Hub.Infrastructure.Email;
+using Hub.Infrastructure.Email.Interfaces;
 using Hub.Infrastructure.Extensions.Generate;
 using Hub.Infrastructure.Lock;
 using Hub.Infrastructure.Lock.Interfaces;
 using Hub.Infrastructure.Logger.Interfaces;
+using Hub.Infrastructure.Mapper;
 using Hub.Infrastructure.MultiTenant;
 using Hub.Infrastructure.Nominator;
 using Hub.Infrastructure.Redis;
 using Hub.Infrastructure.Redis.Cache;
+using Hub.Infrastructure.TimeZone;
+using Hub.Infrastructure.Web;
 using Hub.Shared.Interfaces.MultiTenant;
 using Hub.Shared.Log;
 using MediatR;
@@ -26,6 +31,8 @@ namespace Hub.Infrastructure.Autofac.Dependency
 
             builder.RegisterType<RedLockManager>().AsSelf().SingleInstance();
             builder.RegisterType<RedLockManager>().As<ILockManager>().SingleInstance();
+
+            builder.RegisterType<SendMail>().As<ISendMail>().SingleInstance();
 
             builder.RegisterType<CacheManager>().AsSelf().SingleInstance();
             builder.RegisterType<VersionManager>().As<IVersionManager>();
@@ -54,18 +61,22 @@ namespace Hub.Infrastructure.Autofac.Dependency
             builder.RegisterType<DefaultOrmConfiguration>().AsSelf().SingleInstance();
 
             builder.RegisterType<DefaultTenantManager>().As<ITenantManager>().SingleInstance();
+            builder.RegisterGeneric(typeof(ModelEntityMapper<,>)).AsSelf().InstancePerLifetimeScope();
 
             builder.RegisterType<ConnectionStringBaseConfigurator>().AsSelf().SingleInstance();
 
+            builder.RegisterType<AccessTokenProvider>().As<IAccessTokenProvider>().SingleInstance();
+            builder.RegisterType<CurrentTimezone>().As<ICurrentTimezone>().SingleInstance();
+            builder.RegisterType<Mediator>().As<IMediator>().SingleInstance();
+
             #region AINDA NAO CRIADO 
+
             //builder.RegisterType<NhReadOnlySessionScope>().As<INhReadOnlySessionScope>().InstancePerLifetimeScope();
 
             //builder.RegisterType<CosmosDbConnectionProvider>().As<INoSqlConnectionProvider>().SingleInstance();
-            //builder.RegisterType<SendMail>().As<ISendMail>().SingleInstance();
 
             //builder.RegisterType<AzureCloudStorageManager>().As<IAzureCloudStorageManager>().SingleInstance();
             //builder.RegisterType<AzureCloudStorageManager>().AsSelf().SingleInstance();
-
 
             //builder.RegisterType<ServiceBusManager>().AsSelf().SingleInstance();
 
@@ -75,7 +86,6 @@ namespace Hub.Infrastructure.Autofac.Dependency
 
             //builder.RegisterType<ApiRequestService>().AsImplementedInterfaces().AsSelf().SingleInstance();
 
-            
 
             //builder.RegisterGeneric(typeof(AzureSearchManager<>)).AsSelf().InstancePerLifetimeScope();
             //builder.RegisterType<RequestParametersBuilder>().AsImplementedInterfaces();
@@ -84,17 +94,11 @@ namespace Hub.Infrastructure.Autofac.Dependency
             //builder.RegisterType<EngineInitializationParametersBuilder>().AsImplementedInterfaces();
             //builder.RegisterType<EngineInitializationParametersBuilder>().AsSelf();
 
-            
-
-            //builder.RegisterType<CurrentTimezone>().As<ICurrentTimezone>().SingleInstance();
-
             //builder.RegisterType<UserVM>().As<IUser>();
 
             //builder.RegisterType<MongoManager>().AsSelf().SingleInstance();
 
             //builder.RegisterGeneric(typeof(MongoRepository<>)).AsSelf().InstancePerLifetimeScope();
-
-            
 
             //builder.RegisterType<ConfigurationService>().AsSelf();
             //builder.RegisterType<ConfigurationService>().AsImplementedInterfaces();
@@ -102,14 +106,6 @@ namespace Hub.Infrastructure.Autofac.Dependency
             //builder.RegisterType<ConfigurationManagerConfigProvider>().AsSelf();
             //builder.RegisterType<EnvironmentConfigProvider>().AsSelf();
 
-            //builder.RegisterGeneric(typeof(ModelEntityMapper<,>)).AsSelf().InstancePerLifetimeScope();
-
-
-            
-
-            //builder.RegisterType<AccessTokenProvider>().As<IAccessTokenProvider>().SingleInstance();
-
-            //builder.RegisterType<Mediator>().As<IMediator>().SingleInstance();
 
             //builder.RegisterType<BackgroundJobManager>().AsSelf().InstancePerLifetimeScope(); 
 
