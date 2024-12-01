@@ -22,7 +22,7 @@ using MediatR;
 
 namespace Hub.Infrastructure.Autofac.Dependency
 {
-    public class DependencySetup : IDependencySetup
+    public class DependencyConfiguration : IDependencyConfiguration
     {
         public void Register(ContainerBuilder builder)
         {

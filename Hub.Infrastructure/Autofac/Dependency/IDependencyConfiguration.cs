@@ -2,7 +2,7 @@
 
 namespace Hub.Infrastructure.Autofac.Dependency
 {
-    public interface IDependencySetup
+    public interface IDependencyConfiguration
     {
         void Register(ContainerBuilder builder);
 

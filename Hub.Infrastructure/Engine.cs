@@ -81,7 +81,7 @@ namespace Hub.Infrastructure
         }
 
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public static void Initialize(Assembly executingAssembly, ISchemaNameProvider nameProvider = null, IList<IStartupTask> tasks = null, IList<IDependencySetup> dependencyRegistrars = null, ConnectionStringBaseVM csb = null, ContainerBuilder containerBuilder = null, bool startListenerServiceBusAppSettingsReleaser = true)
+        public static void Initialize(Assembly executingAssembly, ISchemaNameProvider nameProvider = null, IList<IStartupTask> tasks = null, IList<IDependencyConfiguration> dependencyRegistrars = null, ConnectionStringBaseVM csb = null, ContainerBuilder containerBuilder = null, bool startListenerServiceBusAppSettingsReleaser = true)
         {
             ExecutingAssembly = executingAssembly;
 
@@ -99,10 +99,10 @@ namespace Hub.Infrastructure
 
             if (dependencyRegistrars == null)
             {
-                dependencyRegistrars = new List<IDependencySetup>();
+                dependencyRegistrars = new List<IDependencyConfiguration>();
             }
 
-            dependencyRegistrars.Add(new DependencySetup());
+            dependencyRegistrars.Add(new DependencyConfiguration());
 
             _containerManager = new ContainerManager(dependencyRegistrars, containerBuilder);
 
@@ -547,7 +547,7 @@ public class EngineInitializationParameters
     public Assembly ExecutingAssembly { get; set; }
     public ISchemaNameProvider NameProvider { get; set; }
     public IList<IStartupTask> StartupTasks { get; set; } = new List<IStartupTask>();
-    public IList<IDependencySetup> DependencyRegistrators { get; set; } = new List<IDependencySetup>();
+    public IList<IDependencyConfiguration> DependencyRegistrators { get; set; } = new List<IDependencyConfiguration>();
     public ConnectionStringBaseVM ConnectionStringBase { get; set; }
     public ContainerBuilder ContainerBuilder { get; set; }
 

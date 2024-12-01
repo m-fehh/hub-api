@@ -10,7 +10,7 @@ namespace Hub.Infrastructure.Autofac
         private IContainer _container;
         private readonly ContainerBuilder _builder;
 
-        public ContainerManager(IList<IDependencySetup> dependencyRegistrars, ContainerBuilder containerBuilder = null)
+        public ContainerManager(IList<IDependencyConfiguration> dependencyRegistrars, ContainerBuilder containerBuilder = null)
         {
             _builder = containerBuilder ?? new ContainerBuilder();
 

@@ -35,9 +35,9 @@ builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
         {
             new StartupTask(),
         },
-        dependencyRegistrars: new List<IDependencySetup>()
+        dependencyRegistrars: new List<IDependencyConfiguration>()
         {
-            new DependencyRegistrar(),
+            new ApiDependencyConfiguration(),
         },
         containerBuilder: containerBuilder,
         csb: new ConnectionStringBaseVM()

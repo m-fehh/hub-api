@@ -11,7 +11,7 @@ using Hub.Shared.DataConfiguration.Admin;
 
 namespace Hub.API.Configuration
 {
-    public class DependencyRegistrar : IDependencySetup
+    public class ApiDependencyConfiguration : IDependencyConfiguration
     {
         public void Register(ContainerBuilder builder)
         {
