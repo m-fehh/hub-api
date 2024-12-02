@@ -13,6 +13,7 @@ using Hub.Shared.Interfaces.Logger;
 using Hub.Infrastructure.Security;
 using Hub.Infrastructure.Nominator;
 using Hub.Infrastructure.Database.NhManagement;
+using Hub.Shared.Log;
 
 namespace Hub.Infrastructure.Logger.Interfaces
 {
@@ -241,7 +242,7 @@ namespace Hub.Infrastructure.Logger.Interfaces
                     //tambem grava um registro no caso das listas para indicar a quantidade de itens existentes
                     if (isCollection ||
                         newComparator != oldComparator ||
-                    logFather.Action == ELogAction.Insertion)
+                        logFather.Action == ELogAction.Insertion)
                     {
 
                         if (!isCollection)
@@ -281,8 +282,7 @@ namespace Hub.Infrastructure.Logger.Interfaces
                         //Por recursividade a gravação de cada log poderá gerar uma nova lista de ILogFields indicando as alterações dos registros.
                         if (isCollection)
                         {
-                            //if (prop.GetCustomAttributes(true).Any(a => a is DeeperLog))
-                            if (true)
+                            if (prop.GetCustomAttributes(true).Any(a => a is DeeperLog))
                             {
                                 IEnumerable<IBaseEntity> oldList;
 
@@ -353,14 +353,14 @@ namespace Hub.Infrastructure.Logger.Interfaces
                         }
                         else if (typeof(IBaseEntity).IsAssignableFrom(prop.PropertyType))
                         {
-                            //if (prop.GetCustomAttributes(true).Any(a => a is DeeperLog))
-                            //{
-                            //    if (field.Childs == null) field.Childs = new HashSet<ILog>();
+                            if (prop.GetCustomAttributes(true).Any(a => a is DeeperLog))
+                            {
+                                if (field.Childs == null) field.Childs = new HashSet<ILog>();
 
-                            //    var log = Audit(prop.GetValue(obj) as IBaseEntity, ELogAction.Update, false, true);
+                                var log = Audit(prop.GetValue(obj) as IBaseEntity, ELogAction.Update, false, true);
 
-                            //    field.Childs.Add(log);
-                            //}
+                                field.Childs.Add(log);
+                            }
 
                             generateField = true;
                         }

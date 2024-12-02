@@ -4,7 +4,7 @@ using Hub.Shared.Interfaces.Logger;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Hub.Domain.Entities.Logger
+namespace Hub.Domain.Entity.Logger
 {
     public class Log : BaseEntity, ILog
     {
