@@ -15,7 +15,7 @@ namespace Hub.Domain.Developments.Migrations._2024
         {
             var schema = Singleton<ISchemaNameProvider>.Instance.TenantName();
 
-            if (schema == "adm") return;
+            if (schema == "system") return;
 
             schema = "sch" + Engine.Resolve<ITenantManager>().GetInfo().Id;
 

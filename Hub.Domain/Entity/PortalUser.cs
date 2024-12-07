@@ -11,7 +11,7 @@ namespace Hub.Domain.Entity
     {
         [Id(0, Name = "Id", Type = "Int64")]
         [Generator(1, Class = "native")]
-        [Param(2, Name = "sequence", Content = "sq_PortalUser")]
+        [Param(2, Name = "sequence", Content = "SQ_PortalUser")]
         public override long Id { get; set; }
 
         [IgnoreLog]
@@ -21,8 +21,8 @@ namespace Hub.Domain.Entity
         [Property(NotNull = true, Length = 150)]
         public virtual string Name { get; set; }
 
-        [Property(Length = 100)]
-        public virtual string CpfCnpj { get; set; }
+        [Property(NotNull = true, Length = 150)]
+        public virtual string Email { get; set; }
 
         [Property(NotNull = true, Length = 50)]
         public virtual string Login { get; set; }
@@ -45,6 +45,7 @@ namespace Hub.Domain.Entity
         [Key(1, Column = "PortalUserId")]
         [ManyToMany(2, ClassType = typeof(OrganizationalStructure), Column = "StructureId")]
         public virtual ICollection<OrganizationalStructure> OrganizationalStructures { get; set; }
+
 
         [Property(NotNull = false, Length = 100)]
         public virtual string ExternalCode { get; set; }

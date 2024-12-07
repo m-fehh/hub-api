@@ -5,15 +5,16 @@ using NHibernate.Mapping.Attributes;
 
 namespace Hub.Domain.Entity
 {
+    [Class(DynamicUpdate = true)]
     public class Person : BaseEntity, IModificationControl
     {
         [Id(0, Name = "Id", Type = "Int64")]
         [Generator(1, Class = "native")]
-        [Param(2, Name = "sequence", Content = "sq_Person")]
+        [Param(2, Name = "sequence", Content = "SQ_Person")]
         public override long Id { get; set; }
 
-        [Property(NotNull = true, Length = 20)]
-        public virtual string Document { get; set; }
+        [Property(Length = 100)]
+        public virtual string CpfCnpj { get; set; }
 
         [Property(NotNull = true, Length = 500)]
         public virtual string Name { get; set; }

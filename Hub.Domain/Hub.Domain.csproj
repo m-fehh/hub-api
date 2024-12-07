@@ -16,8 +16,4 @@
     <ProjectReference Include="..\Hub.Infrastructure\Hub.Infrastructure.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Developments\Startups\2024\" />
-  </ItemGroup>
-
 </Project>

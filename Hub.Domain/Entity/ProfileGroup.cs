@@ -11,11 +11,14 @@ namespace Hub.Domain.Entity
     {
         [Id(0, Name = "Id", Type = "Int64")]
         [Generator(1, Class = "native")]
-        [Param(2, Name = "sequence", Content = "sq_ProfileGroup")]
+        [Param(2, Name = "sequence", Content = "SQ_ProfileGroup")]
         public override long Id { get; set; }
 
         [Property(NotNull = true, Length = 150)]
         public virtual string Name { get; set; }
+
+        [ManyToOne(Column = "OwnerOrgStructId", NotNull = true)]
+        public virtual OrganizationalStructure OwnerOrgStruct { get; set; }
 
         [DeeperLog]
         [Set(0, Name = "Rules", Table = "ProfileGroup_Rule")]

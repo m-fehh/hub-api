@@ -10,7 +10,7 @@ namespace Hub.Domain.Entity
     {
         [Id(0, Name = "Id", Type = "Int64")]
         [Generator(1, Class = "native")]
-        [Param(2, Name = "sequence", Content = "sq_OrganizationalStructure")]
+        [Param(2, Name = "sequence", Content = "SQ_OrganizationalStructure")]
         public override long Id { get; set; }
 
         [Property(NotNull = true, Length = 10)]
