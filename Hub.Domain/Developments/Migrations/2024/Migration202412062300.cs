@@ -90,6 +90,7 @@ namespace Hub.Domain.Developments.Migrations._2024
                 .WithColumn("DaysToInactivate").AsInt16().Nullable()
                 .WithColumn("PasswordExpirationDays").AsInt32().WithDefaultValue(90).NotNullable()
                 .WithColumn("TemporaryProfile").AsBoolean().NotNullable().WithDefaultValue(false)
+                .WithColumn("AllowMultipleAccess").AsBoolean().NotNullable().WithDefaultValue(true)
                 .WithColumn("Administrator").AsByte().NotNullable();
 
             // Person
@@ -140,6 +141,22 @@ namespace Hub.Domain.Developments.Migrations._2024
                  .WithColumn("Status").AsInt32().NotNullable()
                  .WithColumn("Inactive").AsBoolean().NotNullable()
                  .WithColumn("ProfileCodeTemporary").AsString(100).NotNullable()
+                 .WithColumn("CreationUTC").AsDateTime().Nullable()
+                 .WithColumn("LastUpdateUTC").AsDateTime().Nullable();
+
+            // SQ_PortalUserFingerprint
+            Create.Sequence("SQ_PortalUserFingerprint").InSchema(schema);
+            Create.Table("PortalUserFingerprint")
+                .InSchema(schema)
+                 .WithIdColumn("PK_PortalUserFingerprint")
+                 .WithColumn("UserId").AsInt64().NotNullable()
+                 .WithColumn("OS").AsAnsiString(150).Nullable()
+                 .WithColumn("BrowserName").AsAnsiString(150).Nullable()
+                 .WithColumn("BrowserInfo").AsAnsiString(150).Nullable()
+                 .WithColumn("Lat").AsFloat().Nullable()
+                 .WithColumn("Lng").AsFloat().Nullable()
+                 .WithColumn("IpAddress").AsAnsiString(150).Nullable()
+                 .WithColumn("CookieEnabled").AsBoolean().Nullable()
                  .WithColumn("CreationUTC").AsDateTime().Nullable()
                  .WithColumn("LastUpdateUTC").AsDateTime().Nullable();
 

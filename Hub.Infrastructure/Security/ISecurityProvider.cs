@@ -3,6 +3,7 @@ using Hub.Shared.Models.VMs;
 
 namespace Hub.Infrastructure.Security
 {
+    /// <summary>
     /// A classe que implementar essa interface deverá fornecer um meio de autenticar e autorizar os usuários da aplicação.
     /// </summary>
     public interface ISecurityProvider

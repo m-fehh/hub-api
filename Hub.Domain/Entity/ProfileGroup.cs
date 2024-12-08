@@ -37,6 +37,9 @@ namespace Hub.Domain.Entity
         [Property(NotNull = true)]
         public virtual bool TemporaryProfile { get; set; }
 
+        [Property(NotNull = true)]
+        public virtual bool AllowMultipleAccess { get; set; }
+
         [Property]
         public virtual bool Administrator { get; set; }
     }

@@ -3,15 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34525.116
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hub.API", "Hub.API\Hub.API.csproj", "{4882D61C-64BA-4815-83ED-4650695E6134}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hub.API", "Hub.API\Hub.API.csproj", "{4882D61C-64BA-4815-83ED-4650695E6134}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hub.Application", "Hub.Application\Hub.Application.csproj", "{9F164A8F-A4A4-4193-9F1C-B2FA8A519B66}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hub.Application", "Hub.Application\Hub.Application.csproj", "{9F164A8F-A4A4-4193-9F1C-B2FA8A519B66}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hub.Domain", "Hub.Domain\Hub.Domain.csproj", "{7E04DD62-606E-4067-90E4-BD2AA858BB70}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hub.Domain", "Hub.Domain\Hub.Domain.csproj", "{7E04DD62-606E-4067-90E4-BD2AA858BB70}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hub.Infrastructure", "Hub.Infrastructure\Hub.Infrastructure.csproj", "{3AE525EA-1125-4672-B0CF-C424E9E12E1F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hub.Infrastructure", "Hub.Infrastructure\Hub.Infrastructure.csproj", "{3AE525EA-1125-4672-B0CF-C424E9E12E1F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hub.Shared", "Hub.Shared\Hub.Shared.csproj", "{C9E88CEA-CBCB-4D80-8239-62C5E88D6B75}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hub.Shared", "Hub.Shared\Hub.Shared.csproj", "{C9E88CEA-CBCB-4D80-8239-62C5E88D6B75}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hub.Web", "Hub.Web\Hub.Web.csproj", "{A342DA95-FF10-4682-ABCA-ADAB0221D83E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{C9E88CEA-CBCB-4D80-8239-62C5E88D6B75}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C9E88CEA-CBCB-4D80-8239-62C5E88D6B75}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C9E88CEA-CBCB-4D80-8239-62C5E88D6B75}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A342DA95-FF10-4682-ABCA-ADAB0221D83E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A342DA95-FF10-4682-ABCA-ADAB0221D83E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A342DA95-FF10-4682-ABCA-ADAB0221D83E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A342DA95-FF10-4682-ABCA-ADAB0221D83E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

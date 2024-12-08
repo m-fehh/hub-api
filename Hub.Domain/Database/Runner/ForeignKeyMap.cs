@@ -56,6 +56,9 @@ namespace Hub.Domain.Database.Runner
                 DataReferenceMapManager.CreateForeignKey(migration, schema, "FK_ProfileGroupAccessRequest_PortalUserReceived", "ProfileGroupAccessRequest", "PortalUserReceivedId", "PortalUser", "Id");
                 DataReferenceMapManager.CreateForeignKey(migration, schema, "FK_ProfileGroupAccessRequest_ProfileGroupRequest", "ProfileGroupAccessRequest", "ProfileGroupRequestId", "ProfileGroup", "Id");
                 DataReferenceMapManager.CreateForeignKey(migration, schema, "FK_ProfileGroupAccessRequest_ProfileGroupReceived", "ProfileGroupAccessRequest", "ProfileGroupReceivedId", "ProfileGroup", "Id");
+
+                // PortalUserFingerprint - PortalUser
+                DataReferenceMapManager.CreateForeignKey(migration, schema, "FK_PortalUserFingerprint_PortalUser", "PortalUserFingerprint", "UserId", "PortalUser", "Id");
             }
         }
     }
