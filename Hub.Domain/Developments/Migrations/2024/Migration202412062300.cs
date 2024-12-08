@@ -50,9 +50,17 @@ namespace Hub.Domain.Developments.Migrations._2024
                 .WithColumn("Email").AsString(150).NotNullable()
                 .WithColumn("Login").AsString(50).NotNullable()
                 .WithColumn("Password").AsString(50).NotNullable()
+                .WithColumn("TempPassword").AsString(50).Nullable()
+                .WithColumn("CpfCnpj").AsString(100).NotNullable()
+                .WithColumn("Gender").AsInt16().NotNullable()
+                .WithColumn("BirthDate").AsDateTime().NotNullable()
+                .WithColumn("AreaCode").AsString(5).NotNullable()
+                .WithColumn("PhoneNumber").AsString(10).NotNullable()
+                .WithColumn("Keyword").AsAnsiString(100).Nullable()
                 .WithColumn("Inactive").AsBoolean().NotNullable()
                 .WithColumn("ProfileId").AsInt64().NotNullable()
-                .WithColumn("OwnerOrgStructId").AsInt64().Nullable()
+                .WithColumn("OwnerOrgStructId").AsInt64().NotNullable()
+                .WithColumn("DefaultOrgStructureId").AsInt64().NotNullable()
                 .WithColumn("ExternalCode").AsString(100).Nullable()
                 .WithColumn("CreationUTC").AsDateTime().Nullable()
                 .WithColumn("LastUpdateUTC").AsDateTime().Nullable();
@@ -78,21 +86,42 @@ namespace Hub.Domain.Developments.Migrations._2024
                 .WithIdColumn("PK_ProfileGroup")
                 .WithColumn("Name").AsString(150).NotNullable()
                 .WithColumn("OwnerOrgStructId").AsInt64().Nullable()
+                .WithColumn("DaysToInactivate").AsInt16().Nullable()
+                .WithColumn("PasswordExpirationDays").AsInt32().WithDefaultValue(90).NotNullable()
                 .WithColumn("Administrator").AsByte().NotNullable();
 
             // Person
             Create.Sequence("SQ_Person").InSchema(schema);
             Create.Table("Person").InSchema(schema)
                 .WithIdColumn("PK_Person")
-                .WithColumn("CpfCnpj").AsString(100).NotNullable()
+                .WithColumn("Document").AsString(20).NotNullable()
                 .WithColumn("Name").AsString(500).NotNullable()
-                .WithColumn("Gender").AsInt16().NotNullable()
-                .WithColumn("BirthDate").AsDate().NotNullable()
-                .WithColumn("AreaCode").AsString(5).NotNullable()
-                .WithColumn("Number").AsString(10).NotNullable()
+                .WithColumn("ExternalCode").AsString(100).Nullable()
+                .WithColumn("OwnerOrgStructId").AsInt64().NotNullable()
                 .WithColumn("CreationUTC").AsDateTime().Nullable()
                 .WithColumn("LastUpdateUTC").AsDateTime().Nullable();
 
+            // Person_OrgStructure
+            Create.Table("Person_OrgStructure").InSchema(schema)
+                .WithColumn("PersonId").AsInt64().NotNullable().PrimaryKey("PK_Person_OrgStructure")
+                .WithColumn("StructureId").AsInt64().NotNullable().PrimaryKey("PK_Person_OrgStructure");
+
+            // PortalUserPassHistory
+            Create.Sequence("SQ_PortalUserPassHistory").InSchema(schema);
+            Create.Table("PortalUserPassHistory").InSchema(schema)
+                .WithIdColumn("PK_PortalUserPassHistory")
+                .WithColumn("UserId").AsInt64().Nullable()
+                .WithColumn("Password").AsString(100).Nullable()
+                .WithColumn("CreationUTC").AsDateTime().NotNullable()
+                .WithColumn("ExpirationUTC").AsDateTime().Nullable();
+
+            // PortalUserSetting
+            Create.Sequence("SQ_PortalUserSetting");
+            Create.Table("PortalUserSetting").InSchema(schema)
+                .WithIdColumn("PK_PortalUserSetting")
+                .WithColumn("PortalUserId").AsInt64().NotNullable()
+                .WithColumn("Name").AsString(150).NotNullable()
+                .WithColumn("Value").AsString(2000).NotNullable();
 
             #region Foreign
 

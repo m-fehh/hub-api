@@ -19,7 +19,7 @@ namespace Hub.Infrastructure.Security
         /// <returns></returns>
         List<string> GetAuthorizedRoles(List<string> roles);
 
-        long GetCurrent();
+        IUser GetCurrent();
 
         void SetCurrentUser(long user);
 

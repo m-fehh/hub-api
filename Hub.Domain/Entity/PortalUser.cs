@@ -1,4 +1,6 @@
-﻿using Hub.Shared.Interfaces;
+﻿using Hub.Domain.Interfaces;
+using Hub.Shared.Enums;
+using Hub.Shared.Interfaces;
 using Hub.Shared.Interfaces.Logger;
 using Hub.Shared.Log;
 using NHibernate.Mapping.Attributes;
@@ -7,7 +9,7 @@ namespace Hub.Domain.Entity
 {
     [Class(0, Table = "PortalUser", DynamicUpdate = true)]
     [Cache(1, Usage = CacheUsage.ReadWrite)]
-    public class PortalUser : BaseEntity, IModificationControl, IHubUser
+    public class PortalUser : OrgStructureBaseEntity, IModificationControl, IHubUser, IEntityOrgStructOwned
     {
         [Id(0, Name = "Id", Type = "Int64")]
         [Generator(1, Class = "native")]
@@ -31,6 +33,31 @@ namespace Hub.Domain.Entity
         [Property(NotNull = true, Length = 50)]
         public virtual string Password { get; set; }
 
+        [IgnoreLog]
+        [Property(NotNull = false, Length = 50)]
+        public virtual string TempPassword { get; set; }
+
+        [Property(Length = 100)]
+        public virtual string CpfCnpj { get; set; }
+
+        [Property(NotNull = false)]
+        public virtual EGender? Gender { get; set; }
+
+        [Property(NotNull = false)]
+        public virtual DateTime? BirthDate { get; set; }
+
+        [Property(NotNull = false)]
+        public virtual string AreaCode { get; set; }
+
+        [Property(NotNull = false)]
+        public virtual string PhoneNumber { get; set; }
+
+        [IgnoreLog]
+        public virtual bool ChangingPass { get; set; }
+
+        [Property(NotNull = false, Length = 100)]
+        public virtual string Keyword { get; set; }
+
         [Property]
         public virtual bool Inactive { get; set; }
 
@@ -38,7 +65,10 @@ namespace Hub.Domain.Entity
         public virtual IProfileGroup Profile { get; set; }
 
         [ManyToOne(Column = "OwnerOrgStructId", NotNull = true)]
-        public virtual OrganizationalStructure OwnerOrgStruct { get; set; }
+        public override OrganizationalStructure OwnerOrgStruct { get; set; }
+
+        [ManyToOne(Column = "DefaultOrgStructureId", NotNull = true)]
+        public virtual OrganizationalStructure DefaultOrgStructure { get; set; }
 
         [DeeperLog]
         [Set(0, Name = "OrganizationalStructures", Table = "PortalUser_OrgStructure")]

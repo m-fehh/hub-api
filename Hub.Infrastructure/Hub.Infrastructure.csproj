@@ -40,8 +40,4 @@
     <ProjectReference Include="..\Hub.Shared\Hub.Shared.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Database\Interfaces\" />
-  </ItemGroup>
-
 </Project>

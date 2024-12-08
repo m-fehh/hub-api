@@ -1,4 +1,6 @@
-﻿using Hub.Shared.Interfaces;
+﻿using Hub.Domain.Interfaces;
+using Hub.Shared.Enums;
+using Hub.Shared.Interfaces;
 using Hub.Shared.Interfaces.Logger;
 using Hub.Shared.Log;
 using NHibernate.Mapping.Attributes;
@@ -7,7 +9,7 @@ namespace Hub.Domain.Entity
 {
     [Class(DynamicUpdate = true)]
     [Cache(1, Usage = CacheUsage.ReadWrite)]
-    public class ProfileGroup : BaseEntity, IProfileGroup, ILogableEntity
+    public class ProfileGroup : OrgStructureBaseEntity, IProfileGroup, ILogableEntity
     {
         [Id(0, Name = "Id", Type = "Int64")]
         [Generator(1, Class = "native")]
@@ -18,7 +20,13 @@ namespace Hub.Domain.Entity
         public virtual string Name { get; set; }
 
         [ManyToOne(Column = "OwnerOrgStructId", NotNull = true)]
-        public virtual OrganizationalStructure OwnerOrgStruct { get; set; }
+        public override OrganizationalStructure OwnerOrgStruct { get; set; }
+
+        [Property(NotNull = false)]
+        public virtual int? DaysToInactivate { get; set; }
+
+        [Property(NotNull = true)]
+        public virtual EPasswordExpirationDays PasswordExpirationDays { get; set; }
 
         [DeeperLog]
         [Set(0, Name = "Rules", Table = "ProfileGroup_Rule")]
