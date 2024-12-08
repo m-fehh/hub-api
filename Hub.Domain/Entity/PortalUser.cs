@@ -91,6 +91,9 @@ namespace Hub.Domain.Entity
         [Property(NotNull = false)]
         public virtual DateTime? LastUpdateUTC { get; set; }
 
+        [Property(NotNull = false)]
+        public virtual DateTime? LastPasswordRecoverRequestDate { get; set; }
+
         public virtual ICollection<IAccessRule> AllRules { get { return Profile?.Rules; } }
     }
 }

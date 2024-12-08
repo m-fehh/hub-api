@@ -63,7 +63,8 @@ namespace Hub.Domain.Developments.Migrations._2024
                 .WithColumn("DefaultOrgStructureId").AsInt64().NotNullable()
                 .WithColumn("ExternalCode").AsString(100).Nullable()
                 .WithColumn("CreationUTC").AsDateTime().Nullable()
-                .WithColumn("LastUpdateUTC").AsDateTime().Nullable();
+                .WithColumn("LastUpdateUTC").AsDateTime().Nullable()
+                .WithColumn("LastPasswordRecoverRequestDate").AsDateTime().Nullable();
 
             // AccessRule
             Create.Sequence("SQ_AccessRule").InSchema(schema);
@@ -88,6 +89,7 @@ namespace Hub.Domain.Developments.Migrations._2024
                 .WithColumn("OwnerOrgStructId").AsInt64().Nullable()
                 .WithColumn("DaysToInactivate").AsInt16().Nullable()
                 .WithColumn("PasswordExpirationDays").AsInt32().WithDefaultValue(90).NotNullable()
+                .WithColumn("TemporaryProfile").AsBoolean().NotNullable().WithDefaultValue(false)
                 .WithColumn("Administrator").AsByte().NotNullable();
 
             // Person
@@ -122,6 +124,24 @@ namespace Hub.Domain.Developments.Migrations._2024
                 .WithColumn("PortalUserId").AsInt64().NotNullable()
                 .WithColumn("Name").AsString(150).NotNullable()
                 .WithColumn("Value").AsString(2000).NotNullable();
+
+            // ProfileGroupAccessRequest
+            Create.Sequence("SQ_ProfileGroupAccessRequest").InSchema(schema);
+            Create.Table("ProfileGroupAccessRequest")
+                .InSchema(schema)
+                 .WithIdColumn("PK_ProfileGroupAccessRequest")
+                 .WithColumn("TemporaryProfileId").AsInt64().Nullable()
+                 .WithColumn("PortalUserRequestId").AsInt64().NotNullable()
+                 .WithColumn("PortalUserReceivedId").AsInt64().NotNullable()
+                 .WithColumn("ProfileGroupRequestId").AsInt64().NotNullable()
+                 .WithColumn("ProfileGroupReceivedId").AsInt64().NotNullable()
+                 .WithColumn("InitValidity").AsDateTime().NotNullable()
+                 .WithColumn("EndValidity").AsDateTime().NotNullable()
+                 .WithColumn("Status").AsInt32().NotNullable()
+                 .WithColumn("Inactive").AsBoolean().NotNullable()
+                 .WithColumn("ProfileCodeTemporary").AsString(100).NotNullable()
+                 .WithColumn("CreationUTC").AsDateTime().Nullable()
+                 .WithColumn("LastUpdateUTC").AsDateTime().Nullable();
 
             #region Foreign
 

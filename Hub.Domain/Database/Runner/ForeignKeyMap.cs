@@ -49,6 +49,13 @@ namespace Hub.Domain.Database.Runner
 
                 // Person_OrgStructure - Person / OrganizationalStructure
                 DataReferenceMapManager.CreateForeignKey(migration, schema, "FK_Person_OrgStructure", "Person", "OwnerOrgStructId", "OrganizationalStructure", "Id");
+
+                // ProfileGroupAccessRequest
+                DataReferenceMapManager.CreateForeignKey(migration, schema, "FK_ProfileGroupAccessRequest_TempProfileGroup", "ProfileGroupAccessRequest", "TemporaryProfileId", "ProfileGroup", "Id");
+                DataReferenceMapManager.CreateForeignKey(migration, schema, "FK_ProfileGroupAccessRequest_PortalUserRequest", "ProfileGroupAccessRequest", "PortalUserRequestId", "PortalUser", "Id");
+                DataReferenceMapManager.CreateForeignKey(migration, schema, "FK_ProfileGroupAccessRequest_PortalUserReceived", "ProfileGroupAccessRequest", "PortalUserReceivedId", "PortalUser", "Id");
+                DataReferenceMapManager.CreateForeignKey(migration, schema, "FK_ProfileGroupAccessRequest_ProfileGroupRequest", "ProfileGroupAccessRequest", "ProfileGroupRequestId", "ProfileGroup", "Id");
+                DataReferenceMapManager.CreateForeignKey(migration, schema, "FK_ProfileGroupAccessRequest_ProfileGroupReceived", "ProfileGroupAccessRequest", "ProfileGroupReceivedId", "ProfileGroup", "Id");
             }
         }
     }

@@ -22,6 +22,8 @@ namespace Hub.Application.Services
             this.securityProvider = securityProvider;
         }
 
+        #region PRIVATE METHODS 
+
         private List<string> SaveAppProfileRoles(ProfileGroup entity)
         {
             var redisService = Engine.Resolve<IRedisService>();
@@ -43,7 +45,9 @@ namespace Hub.Application.Services
             var cacheKey = $"ProfileRoles{id}";
             var redisService = Engine.Resolve<IRedisService>();
             redisService.Delete(cacheKey);
-        }
+        } 
+
+        #endregion
 
         public void Validate(ProfileGroup entity)
         {
@@ -112,5 +116,71 @@ namespace Hub.Application.Services
                     }
                 }
             }
+
+            using (var transaction = base._repository.BeginTransaction())
+            {
+                base._repository.Update(entity);
+
+                //Engine.Resolve<ProfileGroupAccessRequestService>().UpdateDelegateProfile(entity);
+
+                if (transaction != null) base._repository.Commit();
+
+                base._repository.Refresh(entity);
+
+                SaveAppProfileRoles(entity);
+
+                var culture = Thread.CurrentThread.CurrentCulture.Name;
+
+                var redisTagName = $"UserProfileMenu{entity.Id}{culture}";
+
+                var redisService = Engine.Resolve<IRedisService>();
+
+                redisService.Set(redisTagName, null);
+
+                //foreach (var item in Engine.Resolve<IRepository<PortalMenu>>().Table.Where(m => m.Name != "main-portal").ToList())
+                //{
+                //    redisTagName = $"UserProfileMenu{item.Name}{entity.Id}{culture}";
+
+                //    redisService.Set(redisTagName, null);
+                //}
+            }
         }
+
+        public override void Delete(long id)
+        {
+            if (Engine.Resolve<IRepository<PortalUser>>().Table.Any(p => p.Profile.Id == id))
+            {
+                throw new BusinessException(Engine.Get("CantDeletePortalUserReference"));
+            }
+
+            using (var transaction = base._repository.BeginTransaction())
+            {
+                var entity = GetById(id);
+
+                base._repository.Delete(id);
+
+                if (transaction != null) base._repository.Commit();
+
+                DeleteAppProfileRoles(id);
+            }
+        }
+
+        public IEnumerable<string> GetAppProfileRoles(long id)
+        {
+            var cacheKey = $"ProfileRoles{id}";
+            var redisService = Engine.Resolve<IRedisService>();
+
+            var profileRoles = redisService.Get(cacheKey).ToString();
+
+            if (!string.IsNullOrEmpty(profileRoles))
+                return JsonConvert.DeserializeObject<IEnumerable<string>>(profileRoles);
+
+            ProfileGroup profile = Table.Where(p => p.Id == id).FirstOrDefault();
+
+            if (profile == null)
+                return new List<string>();
+
+            return SaveAppProfileRoles(profile);
+        }
+    }
 }

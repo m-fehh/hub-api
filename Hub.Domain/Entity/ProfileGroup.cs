@@ -34,6 +34,9 @@ namespace Hub.Domain.Entity
         [ManyToMany(2, ClassType = typeof(AccessRule), Column = "AccessRuleId")]
         public virtual ICollection<IAccessRule> Rules { get; set; }
 
+        [Property(NotNull = true)]
+        public virtual bool TemporaryProfile { get; set; }
+
         [Property]
         public virtual bool Administrator { get; set; }
     }

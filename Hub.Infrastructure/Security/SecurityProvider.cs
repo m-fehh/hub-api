@@ -1,4 +1,5 @@
-﻿using Hub.Shared.Models.VMs;
+﻿using Hub.Shared.Interfaces;
+using Hub.Shared.Models.VMs;
 
 namespace Hub.Infrastructure.Security
 {
@@ -21,9 +22,9 @@ namespace Hub.Infrastructure.Security
 
         IUser GetCurrent();
 
-        void SetCurrentUser(long user);
+        void SetCurrentUser(IUser user);
 
-        //IProfileGroup GetCurrentProfile();
+        IProfileGroup GetCurrentProfile();
 
         long? GetCurrentId();
 

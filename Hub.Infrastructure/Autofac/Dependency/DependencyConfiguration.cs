@@ -2,6 +2,7 @@
 using Autofac.Core;
 using Autofac.Core.Registration;
 using Hub.Infrastructure.Database;
+using Hub.Infrastructure.Database.Models;
 using Hub.Infrastructure.Database.NhManagement;
 using Hub.Infrastructure.Email;
 using Hub.Infrastructure.Email.Interfaces;
@@ -16,6 +17,7 @@ using Hub.Infrastructure.Redis;
 using Hub.Infrastructure.Redis.Cache;
 using Hub.Infrastructure.TimeZone;
 using Hub.Infrastructure.Web;
+using Hub.Shared.Interfaces;
 using Hub.Shared.Interfaces.MultiTenant;
 using Hub.Shared.Log;
 using MediatR;
@@ -68,6 +70,8 @@ namespace Hub.Infrastructure.Autofac.Dependency
             builder.RegisterType<AccessTokenProvider>().As<IAccessTokenProvider>().SingleInstance();
             builder.RegisterType<CurrentTimezone>().As<ICurrentTimezone>().SingleInstance();
             builder.RegisterType<Mediator>().As<IMediator>().SingleInstance();
+
+            builder.RegisterType<UserVM>().As<IUser>();
 
             #region AINDA NAO CRIADO 
 

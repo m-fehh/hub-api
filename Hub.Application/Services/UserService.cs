@@ -90,7 +90,9 @@ using Hub.Infrastructure;
 using Hub.Infrastructure.Database.NhManagement;
 using Hub.Infrastructure.Database.Services;
 using Hub.Infrastructure.Extensions;
+using Hub.Infrastructure.Extensions.Generate;
 using Hub.Infrastructure.Localization;
+using Hub.Infrastructure.Redis;
 using Hub.Infrastructure.Security;
 using Hub.Shared.Enums;
 using System.Linq;
@@ -99,7 +101,14 @@ namespace Hub.Application.Services
 {
     public class UserService : CrudService<PortalUser>
     {
-        public UserService(IRepository<PortalUser> repository) : base(repository) { }
+        private readonly IHubCurrentOrganizationStructure currentOrganizationStructure;
+        private readonly IRedisService redisService;
+
+        public UserService(IRepository<PortalUser> repository, IHubCurrentOrganizationStructure currentOrganizationStructure, IRedisService redisService) : base(repository) 
+        {
+            this.currentOrganizationStructure = currentOrganizationStructure;
+            this.redisService = redisService;
+        }
 
         private void Validate(PortalUser entity)
         {
@@ -244,6 +253,103 @@ namespace Hub.Application.Services
             }
         }
 
+        public override void Update(PortalUser entity)
+        {
+            if (string.IsNullOrEmpty(entity.Keyword))
+            {
+                throw new BusinessException(entity.DefaultRequiredMessage(e => e.Keyword));
+            }
+            var userKeywordService = Engine.Resolve<UserKeywordService>();
+            if (!userKeywordService.IsKeywordValid(entity.Keyword))
+            {
+                throw new BusinessException(Engine.Get("UserKeywordInvalid"));
+            }
+            if (userKeywordService.IsKeywordInUse(entity.Id, entity.Keyword))
+            {
+                throw new BusinessException(Engine.Get("UserKeywordInUse"));
+            }
+
+            if (entity.OrganizationalStructures == null || entity.OrganizationalStructures.Count == 0)
+            {
+                throw new BusinessException(Engine.Get("UserOrgStructRequired"));
+            }
+
+            SetUserDefaultOrganizationalStructure(entity);
+
+            entity.OwnerOrgStruct = _repository.Table.Where(e => e.Id == entity.Id).Select(e => e.OwnerOrgStruct).FirstOrDefault();
+
+            if (entity.ChangingPass && !string.IsNullOrEmpty(entity.Password))
+            {
+                entity.Password = entity.Password.EncodeSHA1();
+            }
+            else if (string.IsNullOrEmpty(entity.Password))
+            {
+                entity.Password = Table.Where(u => u.Id == entity.Id).Select(p => p.Password).First();
+            }
+
+            using (var transaction = base._repository.BeginTransaction())
+            {
+
+                entity.Person = Engine.Resolve<PersonService>().SavePerson(entity.CpfCnpj, entity.Name, entity.OrganizationalStructures.ToList());
+
+                base._repository.Update(entity);
+
+                if (entity.ChangingPass)
+                {
+                    InsertPasswordChangeRecord(entity);
+                }
+
+                if (transaction != null) base._repository.Commit();
+            }
+
+            currentOrganizationStructure.UpdateUser(entity.Id);
+
+            #region Desabilita perfil temporário do usuário
+
+            var tempProfile = UpdateTempProfile(entity);
+
+            #endregion
+        }
+
+        /// <summary>
+        /// Finaliza a requisição de passagem de acessos para o usuário que teve o perfil alterado.
+        /// </summary>
+        /// <param name="user"></param>
+        private ProfileGroup UpdateTempProfile(PortalUser user)
+        {
+            var tempProfile = Engine.Resolve<IRepository<ProfileGroup>>().Table.Where(w => w.Id == user.Profile.Id).Select(s => s.TemporaryProfile).FirstOrDefault();
+
+            if (tempProfile) return null;
+
+            var profileRequestService = Engine.Resolve<IRepository<ProfileGroupAccessRequest>>();
+
+            var userTempProfileApplied = profileRequestService.Table
+                .Where(w => w.PortalUserReceived.Id == user.Id && w.Status == EProfileGroupAccessRequestStatus.Actual)
+                .Select(s => s).FirstOrDefault();
+
+            if (userTempProfileApplied != null)
+            {
+                userTempProfileApplied.Status = EProfileGroupAccessRequestStatus.Revoked;
+                userTempProfileApplied.Inactive = true;
+
+                using (var transaction = base._repository.BeginTransaction())
+                {
+                    profileRequestService.Update(userTempProfileApplied);
+
+                    if (transaction != null) base._repository.Commit();
+                }
+
+                var cacheKey = $"UpdatedUserAccess{user.Id}";
+                redisService.Set(cacheKey, user.Id.ToString(), TimeSpan.FromDays(7));
+
+                return userTempProfileApplied.TemporaryProfile;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
         public void UpdatePassword(PortalUser entity)
         {
             entity.TempPassword = null;
@@ -257,6 +363,62 @@ namespace Hub.Application.Services
 
                 if (transaction != null) base._repository.Commit();
             }
+        }
+
+        public void SetUserDefaultOrganizationalStructure(PortalUser portalUser)
+        {
+            var defaultOrgStructureExists = Engine.Resolve<IRepository<PortalUser>>().Table.Where(w => w.Id == portalUser.Id)
+                                                 .Any(w => portalUser.OrganizationalStructures.Contains(w.DefaultOrgStructure));
+
+            if (!defaultOrgStructureExists)
+            {
+                portalUser.DefaultOrgStructure = portalUser.OrganizationalStructures.FirstOrDefault();
+            }
+        }
+
+        public PortalUser ResetPassword(string document, string newPassword)
+        {
+            var user = base.Table.FirstOrDefault(u => u.CpfCnpj.Equals(document));
+
+            if (user != null && !string.IsNullOrEmpty(newPassword))
+            {
+                user.TempPassword = newPassword;
+                user.LastPasswordRecoverRequestDate = DateTime.Now;
+
+                base._repository.Update(user);
+
+                return user;
+            }
+
+            return null;
+        }
+
+        public override void Delete(long id)
+        {
+            using (var transaction = base._repository.BeginTransaction())
+            {
+                var entity = GetById(id);
+                base._repository.Delete(id);
+
+                if (transaction != null) base._repository.Commit();
+            }
+        }
+
+        public PortalUser CreateTempPassword(string userName)
+        {
+            var user = base.Table.FirstOrDefault(u => u.Login == userName || u.Email == userName);
+
+            if (user != null)
+            {
+                user.TempPassword = Password.Generate(6, 1);
+                user.LastPasswordRecoverRequestDate = DateTime.Now;
+
+                Update(user);
+
+                return user;
+            }
+
+            return null;
         }
     }
 }
