@@ -9,7 +9,7 @@ namespace Hub.Domain.Entity
 {
     [Class(0, Table = "PortalUser", DynamicUpdate = true)]
     [Cache(1, Usage = CacheUsage.ReadWrite)]
-    public class PortalUser : OrgStructureBaseEntity, IModificationControl, IHubUser, IEntityOrgStructOwned
+    public class PortalUser : OrgStructureBaseEntity, IModificationControl, IHubUser, IEntityOrgStructOwned, IUser
     {
         [Id(0, Name = "Id", Type = "Int64")]
         [Generator(1, Class = "native")]
@@ -57,6 +57,15 @@ namespace Hub.Domain.Entity
 
         [Property(NotNull = false, Length = 100)]
         public virtual string Keyword { get; set; }
+
+        public virtual string IpAddress { get; set; }
+
+        [Obsolete("existe apenas para manter compatibilidade com o IUSER")]
+        [Property(Insert = false, Update = false, Formula = "DefaultOrgStructureId")]
+        public virtual long? DefaultOrgStructureId { get; set; }
+
+        [Obsolete("existe apenas para manter compatibilidade com o IUSER")]
+        public virtual List<long> OrgStructures { get; set; }
 
         [Property]
         public virtual bool Inactive { get; set; }

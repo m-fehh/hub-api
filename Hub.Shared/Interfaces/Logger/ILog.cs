@@ -9,7 +9,7 @@ namespace Hub.Shared.Interfaces.Logger
     {
         DateTime CreateDate { get; set; }
 
-        long? CreateUser { get; set; }
+        IUser CreateUser { get; set; }
 
         long ObjectId { get; set; }
 

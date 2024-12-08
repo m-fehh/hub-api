@@ -45,6 +45,14 @@ namespace Hub.Domain.Developments.Migrations._2024
                 .WithColumn("OwnerOrgStructId").AsInt64().Nullable()
                 .WithColumn("FatherId").AsInt64().Nullable()
                 .WithColumn("IpAddress").AsAnsiString(50).Nullable();
+
+            Create.Sequence("SQ_LogField").InSchema(schema);
+            Create.Table("LogField").InSchema(schema)
+                .WithIdColumn("PK_LogField")
+                .WithColumn("LogId").AsInt64().NotNullable()
+                .WithColumn("PropertyName").AsString(200).NotNullable()
+                .WithColumn("OldValue").AsString(Int32.MaxValue).Nullable()
+                .WithColumn("NewValue").AsString(Int32.MaxValue).Nullable();
         }
     }
 }

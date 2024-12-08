@@ -1,49 +1,51 @@
 ﻿using Hub.Shared.Enums.Infrastructure;
 using Hub.Shared.Interfaces;
 using Hub.Shared.Interfaces.Logger;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+using NHibernate.Mapping.Attributes;
 
 namespace Hub.Domain.Entity.Logger
 {
+    [Class(DynamicUpdate = true)]
     public class Log : BaseEntity, ILog
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Id(0, Name = "Id", Type = "Int64")]
+        [Generator(1, Class = "native")]
+        [Param(2, Name = "sequence", Content = "sq_Log")]
         public override long Id { get; set; }
 
-        [Required]
-        public DateTime CreateDate { get; set; }
+        [Property(NotNull = true)]
+        public virtual DateTime CreateDate { get; set; }
 
-        [ForeignKey("CreateUserId")]
-        public long? CreateUser { get; set; }
+        [ManyToOne(Column = "CreateUserId", ClassType = typeof(PortalUser), NotNull = false)]
+        public virtual IUser CreateUser { get; set; }
 
-        [Required]
-        public long ObjectId { get; set; }
+        [Property(NotNull = true)]
+        public virtual long ObjectId { get; set; }
 
-        [Required]
-        [MaxLength(255)]
-        public string ObjectName { get; set; }
+        [Property(NotNull = true)]
+        public virtual string ObjectName { get; set; }
 
-        [Required]
-        public ELogAction Action { get; set; }
+        [Property(NotNull = true)]
+        public virtual ELogAction Action { get; set; }
 
-        [Required]
-        public ELogType LogType { get; set; }
+        [Property(NotNull = true)]
+        public virtual ELogType LogType { get; set; }
 
-        [Required]
-        [MaxLength(500)]
-        public string Message { get; set; }
+        [Property(NotNull = true)]
+        public virtual string Message { get; set; }
 
-        public virtual ISet<ILogField> Fields { get; set; } = new HashSet<ILogField>();
+        [Set(0, Name = "Fields", Cascade = "all-delete-orphan")]
+        [Key(1, Column = "LogId")]
+        [OneToMany(2, ClassType = typeof(LogField))]
+        public virtual ISet<ILogField> Fields { get; set; }
 
-        [ForeignKey("FatherId")]
+        [ManyToOne(Column = "FatherId", ClassType = typeof(LogField), NotNull = false)]
         public virtual ILogField Father { get; set; }
-        public long? FatherId { get; set; }
 
-        [ForeignKey("OwnerOrgStructId")]
-        public long? OwnerOrgStructId { get; set; }
+        [ManyToOne(Column = "OwnerOrgStructId", NotNull = false)]
+        public virtual OrganizationalStructure OwnerOrgStruct { get; set; }
 
-        public string IpAddress { get; set; }
+        [Property(NotNull = false)]
+        public virtual string IpAddress { get; set; }
     }
 }
