@@ -12,11 +12,7 @@ namespace Hub.Application.Services
 {
     public class PersonService : CrudService<Person>
     {
-        public PersonService(IRepository<Person> repository)
-            : base(repository)
-        {
-        }
-
+        public PersonService(IRepository<Person> repository) : base(repository) { }
 
         private void Validate(Person entity)
         {
