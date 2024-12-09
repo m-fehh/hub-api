@@ -6,6 +6,7 @@ using Hub.Infrastructure.Extensions;
 using Hub.Infrastructure;
 using Hub.Shared.Interfaces.MultiTenant;
 using Hub.Infrastructure.Localization;
+using Hub.Infrastructure.Exceptions;
 
 namespace Hub.Application.Services
 {
