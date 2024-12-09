@@ -56,7 +56,7 @@ namespace Hub.Domain.Developments.Migrations._2024
                 .WithColumn("Gender").AsInt16().NotNullable()
                 .WithColumn("BirthDate").AsDateTime().NotNullable()
                 .WithColumn("AreaCode").AsString(5).NotNullable()
-                .WithColumn("PhoneNumber").AsString(10).NotNullable()
+                .WithColumn("PhoneNumber").AsString(12).NotNullable()
                 .WithColumn("Keyword").AsAnsiString(100).Nullable()
                 .WithColumn("Inactive").AsBoolean().NotNullable()
                 .WithColumn("ProfileId").AsInt64().NotNullable()
@@ -187,6 +187,21 @@ namespace Hub.Domain.Developments.Migrations._2024
                 .WithColumn("OrganizationalStructureId").AsInt64().NotNullable()
                 .WithColumn("ConfigId").AsInt64().NotNullable()
                 .WithColumn("Value").AsString(300).NotNullable()
+                .WithColumn("CreationUTC").AsDateTime().Nullable()
+                .WithColumn("LastUpdateUTC").AsDateTime().Nullable();
+
+            // Establishment
+            Create.Sequence("SQ_Establishment").InSchema(schema);
+            Create.Table("Establishment").InSchema(schema)
+                .WithIdColumn("PK_Establishment")
+                .WithColumn("OrganizationalStructureId").AsInt64().NotNullable()
+                .WithColumn("CNPJ").AsString(20).NotNullable()
+                .WithColumn("SocialName").AsString(500).NotNullable()
+                .WithColumn("PostalCode").AsString(15).NotNullable()
+                .WithColumn("OpeningTime").AsString(10).Nullable()
+                .WithColumn("ClosingTime").AsString(10).Nullable()
+                .WithColumn("PhoneNumber").AsString(12).NotNullable()
+                .WithColumn("SystemStartDate").AsDateTime().Nullable()
                 .WithColumn("CreationUTC").AsDateTime().Nullable()
                 .WithColumn("LastUpdateUTC").AsDateTime().Nullable();
 

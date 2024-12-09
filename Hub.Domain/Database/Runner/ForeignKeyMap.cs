@@ -66,6 +66,9 @@ namespace Hub.Domain.Database.Runner
                 // OrganizationalStructureConfig - OrganizationalStructure / OrgStructConfigDefault
                 DataReferenceMapManager.CreateForeignKey(migration, schema, "FK_OrgStrucConfig_OrgStruc", "OrganizationalStructureConfig", "OrganizationalStructureId", "OrganizationalStructure", "Id");
                 DataReferenceMapManager.CreateForeignKey(migration, schema, "FK_OrgStrucConfig_Config", "OrganizationalStructureConfig", "ConfigId", "OrgStructConfigDefault", "Id");
+
+                // Establishment - OrganizationalStructure
+                DataReferenceMapManager.CreateForeignKey(migration, schema, "FK_Establish_OrgStruc", "Establishment", "OrganizationalStructureId", "OrganizationalStructure", "Id");
             }
         }
     }

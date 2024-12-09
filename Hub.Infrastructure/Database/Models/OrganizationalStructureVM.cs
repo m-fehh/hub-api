@@ -106,7 +106,7 @@ namespace Hub.Infrastructure.Database.Models
     public class OrganizationalStructureAddressVM
     {
         public string PostalCode { get; set; }
-        public EAddressType? eType { get; set; }
+        //public EAddressType? eType { get; set; }
         public string Type { get; set; }
         public string Description { get; set; }
         public string Neighborhood { get; set; }

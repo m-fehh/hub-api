@@ -416,16 +416,7 @@ namespace Hub.Application.Services
         {
             try
             {
-                var message = AsyncHelper.RunSync(async () =>
-                {
-                    return await InternalApi.Request(new HttpEntityName(EHttpServiceType.SvcUser, EBusActionType.Query, "login"), JsonConvert.SerializeObject(new
-                    {
-                        Username = request.Login,
-                        Password = request.Password
-                    }));
-                });
-
-                var token = message.Check<string>("token");
+                var token = Engine.Resolve<LoginService>().Login(new LoginVM { Username = request.Login, Password = request.Password });
 
                 var tokenResult = Engine.Resolve<IAccessTokenProvider>().ValidateToken(token);
 
