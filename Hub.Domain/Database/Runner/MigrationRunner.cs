@@ -5,6 +5,7 @@ using Hub.Infrastructure;
 using Hub.Infrastructure.Database.NhManagement.Migrations;
 using Hub.Infrastructure.Redis;
 using Hub.Infrastructure.Lock;
+using Hub.Infrastructure.Exceptions;
 
 namespace Hub.Domain.Database.Runner
 {

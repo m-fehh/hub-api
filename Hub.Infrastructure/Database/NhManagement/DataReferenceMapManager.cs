@@ -1,4 +1,5 @@
 ﻿using FluentMigrator;
+using Hub.Infrastructure.Exceptions;
 using Hub.Infrastructure.Extensions;
 
 namespace Hub.Infrastructure.Database.NhManagement

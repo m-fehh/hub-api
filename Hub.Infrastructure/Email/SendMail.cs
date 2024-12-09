@@ -9,6 +9,7 @@ using Hub.Infrastructure.Email.Models;
 using Hub.Infrastructure.Extensions;
 using Hub.Infrastructure.Autofac;
 using Hub.Infrastructure.Logger;
+using Hub.Infrastructure.Exceptions;
 
 namespace Hub.Infrastructure.Email
 {

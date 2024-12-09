@@ -8,6 +8,7 @@ using Hub.Infrastructure;
 using Hub.Shared.Interfaces;
 using System.Web;
 using System.Xml.Serialization;
+using Hub.Infrastructure.Exceptions;
 
 namespace Hub.Application.ModelMapper
 {

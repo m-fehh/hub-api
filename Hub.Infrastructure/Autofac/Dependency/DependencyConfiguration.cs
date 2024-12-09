@@ -101,8 +101,6 @@ namespace Hub.Infrastructure.Autofac.Dependency
             //builder.RegisterType<EngineInitializationParametersBuilder>().AsImplementedInterfaces();
             //builder.RegisterType<EngineInitializationParametersBuilder>().AsSelf();
 
-            //builder.RegisterType<UserVM>().As<IUser>();
-
             //builder.RegisterType<MongoManager>().AsSelf().SingleInstance();
 
             //builder.RegisterGeneric(typeof(MongoRepository<>)).AsSelf().InstancePerLifetimeScope();

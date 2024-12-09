@@ -1,4 +1,5 @@
-﻿using Hub.Infrastructure.Extensions;
+﻿using Hub.Infrastructure.Exceptions;
+using Hub.Infrastructure.Extensions;
 using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Tokens;
 using System;

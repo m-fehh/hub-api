@@ -3,6 +3,7 @@ using Hub.Domain.Interfaces;
 using Hub.Infrastructure;
 using Hub.Infrastructure.Database.NhManagement;
 using Hub.Infrastructure.Database.Services;
+using Hub.Infrastructure.Exceptions;
 using Hub.Infrastructure.Extensions;
 using Hub.Infrastructure.Localization;
 using Hub.Infrastructure.Redis;
