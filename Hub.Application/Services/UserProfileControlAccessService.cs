@@ -2,9 +2,9 @@
 using Hub.Infrastructure;
 using Hub.Shared.Interfaces;
 using Newtonsoft.Json;
-using Hub.Shared.Models;
 using Hub.Domain.Entity;
 using Hub.Infrastructure.Exceptions;
+using Hub.Shared.Models.VMs;
 
 namespace Hub.Application.Services
 {

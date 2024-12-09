@@ -59,6 +59,13 @@ namespace Hub.Domain.Database.Runner
 
                 // PortalUserFingerprint - PortalUser
                 DataReferenceMapManager.CreateForeignKey(migration, schema, "FK_PortalUserFingerprint_PortalUser", "PortalUserFingerprint", "UserId", "PortalUser", "Id");
+
+                // OrgStructConfigDefault - OrgStructConfigDefault
+                DataReferenceMapManager.CreateForeignKey(migration, schema, "FK_OrgStructConfig_OrgStructConfigDependent", "OrgStructConfigDefault", "OrgStructConfigDefaultDependencyId", "OrgStructConfigDefault", "Id");
+
+                // OrganizationalStructureConfig - OrganizationalStructure / OrgStructConfigDefault
+                DataReferenceMapManager.CreateForeignKey(migration, schema, "FK_OrgStrucConfig_OrgStruc", "OrganizationalStructureConfig", "OrganizationalStructureId", "OrganizationalStructure", "Id");
+                DataReferenceMapManager.CreateForeignKey(migration, schema, "FK_OrgStrucConfig_Config", "OrganizationalStructureConfig", "ConfigId", "OrgStructConfigDefault", "Id");
             }
         }
     }

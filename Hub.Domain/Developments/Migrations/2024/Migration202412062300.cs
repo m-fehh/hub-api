@@ -1,5 +1,6 @@
 ﻿using FluentMigrator;
 using Hub.Domain.Database.Runner;
+using Hub.Domain.Entity;
 using Hub.Infrastructure;
 using Hub.Infrastructure.Autofac;
 using Hub.Infrastructure.Extensions;
@@ -159,6 +160,35 @@ namespace Hub.Domain.Developments.Migrations._2024
                  .WithColumn("CookieEnabled").AsBoolean().Nullable()
                  .WithColumn("CreationUTC").AsDateTime().Nullable()
                  .WithColumn("LastUpdateUTC").AsDateTime().Nullable();
+
+
+            // OrgStructConfigDefault
+            Create.Sequence("SQ_OrgStructConfigDefault").InSchema(schema);
+            Create.Table("OrgStructConfigDefault").InSchema(schema)
+                .WithIdColumn("PK_OrgStructConfigDefault")
+                .WithColumn("Name").AsString(150).NotNullable()
+                .WithColumn("DefaultValue").AsString(300).NotNullable()
+                .WithColumn("ConfigType").AsString(150).NotNullable()
+                .WithColumn("ApplyToRoot").AsByte().Nullable()
+                .WithColumn("ApplyToDomain").AsByte().Nullable()
+                .WithColumn("ApplyToLeaf").AsByte().Nullable()
+                .WithColumn("GroupName").AsString(150).Nullable()
+                .WithColumn("SearchName").AsString(150).Nullable()
+                .WithColumn("SearchExtraCondition").AsString(150).Nullable()
+                .WithColumn("Options").AsString(int.MaxValue).Nullable()
+                .WithColumn("Legend").AsAnsiString(150).Nullable()
+                .WithColumn("OrgStructConfigDefaultDependencyId").AsInt64().Nullable()
+                .WithColumn("MaxLength").AsInt16().Nullable();
+
+            // OrganizationalStructureConfig
+            Create.Sequence("SQ_OrgStructureConfig").InSchema(schema);
+            Create.Table("OrganizationalStructureConfig").InSchema(schema)
+                .WithIdColumn("PK_OrgStructureConfig")
+                .WithColumn("OrganizationalStructureId").AsInt64().NotNullable()
+                .WithColumn("ConfigId").AsInt64().NotNullable()
+                .WithColumn("Value").AsString(300).NotNullable()
+                .WithColumn("CreationUTC").AsDateTime().Nullable()
+                .WithColumn("LastUpdateUTC").AsDateTime().Nullable();
 
             #region Foreign
 
