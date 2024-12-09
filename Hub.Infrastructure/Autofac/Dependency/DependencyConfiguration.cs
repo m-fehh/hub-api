@@ -7,6 +7,7 @@ using Hub.Infrastructure.Database.NhManagement;
 using Hub.Infrastructure.Email;
 using Hub.Infrastructure.Email.Interfaces;
 using Hub.Infrastructure.Extensions.Generate;
+using Hub.Infrastructure.Hangfire;
 using Hub.Infrastructure.Lock;
 using Hub.Infrastructure.Lock.Interfaces;
 using Hub.Infrastructure.Logger.Interfaces;
@@ -73,6 +74,8 @@ namespace Hub.Infrastructure.Autofac.Dependency
 
             builder.RegisterType<UserVM>().As<IUser>();
 
+            builder.RegisterType<BackgroundJobManager>().AsSelf().InstancePerLifetimeScope();
+
             #region AINDA NAO CRIADO 
 
             //builder.RegisterType<NhReadOnlySessionScope>().As<INhReadOnlySessionScope>().InstancePerLifetimeScope();
@@ -109,9 +112,6 @@ namespace Hub.Infrastructure.Autofac.Dependency
 
             //builder.RegisterType<ConfigurationManagerConfigProvider>().AsSelf();
             //builder.RegisterType<EnvironmentConfigProvider>().AsSelf();
-
-
-            //builder.RegisterType<BackgroundJobManager>().AsSelf().InstancePerLifetimeScope(); 
 
             #endregion
 

@@ -10,6 +10,7 @@ using Hub.API.Configuration;
 using Autofac.Extensions.DependencyInjection;
 using Autofac;
 using Hub.API.Configuration.Context;
+using static System.Net.Mime.MediaTypeNames;
 
 var builder = WebApplication.CreateBuilder();
 
@@ -37,7 +38,7 @@ builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
         },
         dependencyRegistrars: new List<IDependencyConfiguration>()
         {
-            new ApiDependencyConfiguration(),
+            new Hub.Application.Configuration.DependencyConfiguration(),
         },
         containerBuilder: containerBuilder,
         csb: new ConnectionStringBaseVM()
