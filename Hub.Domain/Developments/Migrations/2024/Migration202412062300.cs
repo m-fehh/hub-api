@@ -205,6 +205,23 @@ namespace Hub.Domain.Developments.Migrations._2024
                 .WithColumn("CreationUTC").AsDateTime().Nullable()
                 .WithColumn("LastUpdateUTC").AsDateTime().Nullable();
 
+            // PortalMenu
+            Create.Sequence("SQ_PortalMenu").InSchema(schema);
+            Create.Table("PortalMenu").InSchema(schema)
+                .WithIdColumn("PK_PortalMenu")
+                .WithColumn("Name").AsString(150).NotNullable();
+
+            // PortalMenuItem
+            Create.Sequence("SQ_PortalMenuItem").InSchema(schema);
+            Create.Table("PortalMenuItem").InSchema(schema)
+                .WithIdColumn("PK_PortalMenuItem")
+                .WithColumn("MenuId").AsInt64().NotNullable()
+                .WithColumn("ParentId").AsInt64().Nullable()
+                .WithColumn("RuleId").AsInt64().NotNullable()
+                .WithColumn("Url").AsString(150).Nullable()
+                .WithColumn("IconName").AsString(50).Nullable()
+                .WithColumn("ColOrder").AsInt32().Nullable();
+
             #region Foreign
 
             ForeignKeyMap.Map(this);

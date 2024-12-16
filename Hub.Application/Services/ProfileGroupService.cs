@@ -138,12 +138,12 @@ namespace Hub.Application.Services
 
                 redisService.Set(redisTagName, null);
 
-                //foreach (var item in Engine.Resolve<IRepository<PortalMenu>>().Table.Where(m => m.Name != "main-portal").ToList())
-                //{
-                //    redisTagName = $"UserProfileMenu{item.Name}{entity.Id}{culture}";
+                foreach (var item in Engine.Resolve<IRepository<PortalMenu>>().Table.Where(m => m.Name != "main-portal").ToList())
+                {
+                    redisTagName = $"UserProfileMenu{item.Name}{entity.Id}{culture}";
 
-                //    redisService.Set(redisTagName, null);
-                //}
+                    redisService.Set(redisTagName, null);
+                }
             }
         }
 

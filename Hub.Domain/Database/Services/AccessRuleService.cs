@@ -4,7 +4,7 @@ using Hub.Infrastructure.Database.Services;
 using Hub.Shared.Interfaces;
 
 
-namespace Hub.Application.Services
+namespace Hub.Domain.Database.Services
 {
     public class AccessRuleService : CrudService<AccessRule>
     {
@@ -12,15 +12,15 @@ namespace Hub.Application.Services
 
         public override long Insert(AccessRule entity)
         {
-            using (var transaction = base._repository.BeginTransaction())
+            using (var transaction = _repository.BeginTransaction())
             {
-                var ret = base._repository.Insert(entity);
+                var ret = _repository.Insert(entity);
 
                 entity.Tree = GenerateTree(entity);
 
-                base._repository.Update(entity);
+                _repository.Update(entity);
 
-                if (transaction != null) base._repository.Commit();
+                if (transaction != null) _repository.Commit();
 
                 return ret;
             }
@@ -30,23 +30,23 @@ namespace Hub.Application.Services
         {
             entity.Tree = GenerateTree(entity);
 
-            using (var transaction = base._repository.BeginTransaction())
+            using (var transaction = _repository.BeginTransaction())
             {
-                base._repository.Update(entity);
+                _repository.Update(entity);
 
-                if (transaction != null) base._repository.Commit();
+                if (transaction != null) _repository.Commit();
             }
         }
 
         public override void Delete(long id)
         {
-            using (var transaction = base._repository.BeginTransaction())
+            using (var transaction = _repository.BeginTransaction())
             {
                 var entity = base.GetById(id);
 
-                base._repository.Delete(entity);
+                _repository.Delete(entity);
 
-                if (transaction != null) base._repository.Commit();
+                if (transaction != null) _repository.Commit();
             }
         }
 
