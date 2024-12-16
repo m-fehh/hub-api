@@ -411,6 +411,11 @@ namespace Hub.Domain.Developments.Startups._2024
             });
 
             #endregion
+
+
+            //var arParameters = new AccessRuleParameters("Product", "PR") { IsUpdateEnable = false };
+            //var submenuParameters = new SubmenuParameters(arParameters, "~/Product/Index", 8);
+            //AccessHelper.CreateSubmenu(submenuParameters);
         }
 
         public long Order
