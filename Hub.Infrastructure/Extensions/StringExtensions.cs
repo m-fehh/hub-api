@@ -458,7 +458,6 @@ namespace Hub.Infrastructure.Extensions
             return EmailValidator.Validate(email);
         }
 
-
         public static bool ValidateIp(this string email)
         {
             Regex rg = new Regex(@"^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$");
@@ -660,7 +659,6 @@ namespace Hub.Infrastructure.Extensions
             return fallback;
         }
 
-
         /// <summary>
         /// Tenta converter uma string em timespan com opção de valor padrão
         /// </summary>
@@ -695,6 +693,7 @@ namespace Hub.Infrastructure.Extensions
         /// </summary>
         /// <param name="value">Documento do usuário para validação</param>
         /// <returns>Válido / Inválido</returns>
+        [Obsolete("Utilize a validação de documentos através do método ValidateDocument da classe DocumentValidator")]
         public static bool ValidateDocument(this string value)
         {
             if (string.IsNullOrEmpty(value)) return false;
@@ -865,6 +864,18 @@ namespace Hub.Infrastructure.Extensions
 
             return match.Success;
 
+        }
+
+        /// <summary>
+        /// Remove as máscaras dos documentos
+        /// </summary>
+        /// <param name="document"> documento </param>
+        /// <returns></returns>
+        public static string UnmaskDocument(this string document)
+        {
+            if (string.IsNullOrEmpty(document)) return document;
+
+            return document.Replace(".", "").Replace("-", "").Replace("/", "").Trim();
         }
     }
 
