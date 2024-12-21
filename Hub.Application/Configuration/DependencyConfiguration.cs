@@ -3,6 +3,7 @@ using Hub.Application.ModelMapper;
 using Hub.Application.Services;
 using Hub.Application.Services.Admin;
 using Hub.Domain.Database.Runner;
+using Hub.Domain.Database.Services;
 using Hub.Domain.Entity;
 using Hub.Domain.Interfaces;
 using Hub.Infrastructure.Autofac;
@@ -49,7 +50,16 @@ namespace Hub.Application.Configuration
             builder.RegisterType<PortalAccessTokenProvider>().As<IAccessTokenProvider>().InstancePerLifetimeScope();
             builder.RegisterType<HangfireHelper>().As<IHangfireHelper>().SingleInstance();
 
-            builder.RegisterType<UserService>().As<ICrudService<PortalUser>>().As<ISecurityProvider>().As<ISecurityProviderTemp>().AsSelf().InstancePerLifetimeScope();
+            //builder.RegisterType<UserService>().As<ICrudService<PortalUser>>().As<ISecurityProvider>().As<ISecurityProviderTemp>().AsSelf().InstancePerLifetimeScope();
+            builder.RegisterType<UserService>()
+                .As<ICrudService<PortalUser>>()
+                .As<ISecurityProvider>()
+                .As<ISecurityProviderTemp>()
+                .AsSelf()
+                .InstancePerLifetimeScope();
+
+            builder.RegisterType<HubCurrentOrganizationStructure>().As<IHubCurrentOrganizationStructure>().SingleInstance();
+
             builder.RegisterType<PortalUserPassHistoryService>().As<ICrudService<PortalUserPassHistory>>().AsSelf();
 
             builder.RegisterType<ProfileGroupService>().As<ICrudService<ProfileGroup>>();
@@ -72,6 +82,8 @@ namespace Hub.Application.Configuration
 
             builder.RegisterType<PersonService>().As<ICrudService<Person>>();
             builder.RegisterType<PersonService>().AsSelf();
+
+            builder.RegisterType<PortalUserSettingService>().As<IUserSettingManager>();
 
             builder.RegisterType<UserKeywordService>().AsSelf();
 

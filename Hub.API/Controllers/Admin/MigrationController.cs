@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Hub.API.Controllers.Admin
 {
+    [ApiController]
     public class MigrationController : BaseController
     {
         public MigrationController() : base() { }

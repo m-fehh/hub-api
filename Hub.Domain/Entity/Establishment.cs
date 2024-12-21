@@ -34,6 +34,9 @@ namespace Hub.Domain.Entity
         [Property(NotNull = false, Length = 50)]
         public virtual string PhoneNumber { get; set; }
 
+        [Property(NotNull = false, Length = 120)]
+        public virtual string Timezone { get; set; }
+
         [Property]
         public virtual DateTime? SystemStartDate { get; set; }
 

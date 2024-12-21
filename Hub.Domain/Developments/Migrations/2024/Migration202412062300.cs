@@ -201,6 +201,7 @@ namespace Hub.Domain.Developments.Migrations._2024
                 .WithColumn("OpeningTime").AsString(10).Nullable()
                 .WithColumn("ClosingTime").AsString(10).Nullable()
                 .WithColumn("PhoneNumber").AsString(12).NotNullable()
+                .WithColumn("Timezone").AsString(120).Nullable()
                 .WithColumn("SystemStartDate").AsDateTime().Nullable()
                 .WithColumn("CreationUTC").AsDateTime().Nullable()
                 .WithColumn("LastUpdateUTC").AsDateTime().Nullable();
